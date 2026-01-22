@@ -1,0 +1,832 @@
+{
+  "metadata": {
+    "title": "AI in Education Salience Index (AIESI) - Data Collection",
+    "version": "1.0",
+    "date_collected": "2025-01-22",
+    "coverage": "EU27",
+    "sources": [
+      "OECD TALIS 2024",
+      "Oxford Insights Government AI Readiness Index 2025",
+      "GoStudent European Educational AI Index 2025",
+      "OECD Progress in Implementing EU Coordinated Plan on AI 2024",
+      "AI Watch European Commission",
+      "HolonIQ Europe EdTech 200 (2025)",
+      "Eurostat DESI 2024"
+    ],
+    "dimensions": {
+      "policy": "National AI strategy, budget, education initiatives",
+      "adoption": "Teacher AI usage, firm adoption, EdTech ecosystem",
+      "media_salience": "Proxy via policy activity and public discourse indicators"
+    }
+  },
+  "countries": [
+    {
+      "country": "Austria",
+      "country_code": "AT",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 69.72,
+        "gov_ai_readiness_rank": 17,
+        "edu_ai_index_score": 3.0,
+        "notes": "Strategy reviewed 2024 with implementation plan"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 44,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 1.9,
+        "notes": "DACH region 40% school AI access; 44% device access"
+      },
+      "scores": {
+        "policy_score": 0.60,
+        "adoption_score": 0.50,
+        "overall_score": 0.55,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Belgium",
+      "country_code": "BE",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": 153.5,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 65.17,
+        "gov_ai_readiness_rank": 20,
+        "edu_ai_index_score": null,
+        "notes": "Flanders: EUR 35M policy + EUR 118.5M R&I (2024)"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 31.5,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "Flemish 40% + French 23% teachers AI (average 31.5%)"
+      },
+      "scores": {
+        "policy_score": 0.55,
+        "adoption_score": 0.45,
+        "overall_score": 0.50,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Bulgaria",
+      "country_code": "BG",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "ai_budget_eur_millions": 12.5,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 56.60,
+        "gov_ai_readiness_rank": 51,
+        "edu_ai_index_score": null,
+        "notes": "AI budget EUR 5-20M range; AI-ENTR4YOUTH participant"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 22,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "22% teacher AI use (low end)"
+      },
+      "scores": {
+        "policy_score": 0.35,
+        "adoption_score": 0.30,
+        "overall_score": 0.33,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Croatia",
+      "country_code": "HR",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 49.79,
+        "gov_ai_readiness_rank": 44,
+        "edu_ai_index_score": null,
+        "notes": "Participating in EuroHPC JU initiatives"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "Limited data available"
+      },
+      "scores": {
+        "policy_score": 0.30,
+        "adoption_score": 0.25,
+        "overall_score": 0.28,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Cyprus",
+      "country_code": "CY",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "ai_budget_eur_millions": 3.75,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 59.71,
+        "gov_ai_readiness_rank": 46,
+        "edu_ai_index_score": null,
+        "notes": "EUR 2.5-5M annually; updating strategy"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "Limited data; low ICT graduates"
+      },
+      "scores": {
+        "policy_score": 0.35,
+        "adoption_score": 0.30,
+        "overall_score": 0.33,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Czechia",
+      "country_code": "CZ",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 64.56,
+        "gov_ai_readiness_rank": 28,
+        "edu_ai_index_score": null,
+        "notes": "Strategy revised 2024 for economy and society benefit"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 46,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 2.67,
+        "notes": "46% teacher AI use (high); AI-ENTR4YOUTH participant"
+      },
+      "scores": {
+        "policy_score": 0.50,
+        "adoption_score": 0.65,
+        "overall_score": 0.58,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Denmark",
+      "country_code": "DK",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": 225.5,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 74.75,
+        "gov_ai_readiness_rank": 13,
+        "edu_ai_index_score": null,
+        "notes": "2024-2027 strategy; EUR 200M R&D + EUR 25.5M education fund; NVIDIA collaboration"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 31,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": 25,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "25%+ firm AI adoption (top 3 EU); 31% teacher agreement on AI for lesson plans"
+      },
+      "scores": {
+        "policy_score": 0.75,
+        "adoption_score": 0.55,
+        "overall_score": 0.65,
+        "data_quality": "high"
+      }
+    },
+    {
+      "country": "Estonia",
+      "country_code": "EE",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": 31.7,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 69.56,
+        "gov_ai_readiness_rank": 19,
+        "edu_ai_index_score": null,
+        "notes": "AI Leap initiative (inspired by Tiger Leap); horizontal cross-sectoral framework"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 11.0,
+        "notes": "Highest ICT graduates % in EU (~11%); honourable mention Edu AI Index"
+      },
+      "scores": {
+        "policy_score": 0.70,
+        "adoption_score": 0.55,
+        "overall_score": 0.63,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Finland",
+      "country_code": "FI",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2017,
+        "ai_budget_eur_millions": 200,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 70.30,
+        "gov_ai_readiness_rank": 16,
+        "edu_ai_index_score": null,
+        "notes": "EUR 200M AI investment; Business Finland GenAI campaign"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 27,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": 25,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 2.97,
+        "notes": "27% teacher AI use; 25%+ firm adoption (top 3 EU)"
+      },
+      "scores": {
+        "policy_score": 0.75,
+        "adoption_score": 0.50,
+        "overall_score": 0.63,
+        "data_quality": "high"
+      }
+    },
+    {
+      "country": "France",
+      "country_code": "FR",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2018,
+        "ai_budget_eur_millions": 1000,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 77.31,
+        "gov_ai_readiness_rank": 3,
+        "edu_ai_index_score": 3.3,
+        "notes": "EUR 4B for 2022-2025; second phase focusing on SME adoption; proposed GenAI regulation for education"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 14,
+        "teachers_ai_training_pct": 9,
+        "ai_in_schools_access_pct": 20,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": 12,
+        "ict_graduates_pct": null,
+        "notes": "LOWEST teacher AI use in EU (14%); only 9% received AI training; only 10% school AI access"
+      },
+      "scores": {
+        "policy_score": 0.85,
+        "adoption_score": 0.25,
+        "overall_score": 0.55,
+        "data_quality": "high"
+      }
+    },
+    {
+      "country": "Germany",
+      "country_code": "DE",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2018,
+        "strategy_updated": 2020,
+        "ai_budget_eur_millions": 625,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 76.78,
+        "gov_ai_readiness_rank": 4,
+        "edu_ai_index_score": 2.7,
+        "notes": "EUR 5B by 2025; EUR 3.38B spent by 2024; AI Campus; 100+ AI professorships; Humboldt AI awards"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 44,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": 13,
+        "ict_graduates_pct": 19.92,
+        "notes": "44% device access (highest); 2nd in EdTech startups (13%); most ICT graduates in EU"
+      },
+      "scores": {
+        "policy_score": 0.80,
+        "adoption_score": 0.45,
+        "overall_score": 0.63,
+        "data_quality": "high"
+      }
+    },
+    {
+      "country": "Greece",
+      "country_code": "EL",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 60.51,
+        "gov_ai_readiness_rank": 34,
+        "edu_ai_index_score": null,
+        "notes": "Establishing AI observatory; AI-ENTR4YOUTH participant"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 29,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "29% access (below EU avg 36%); 22% schools no AI rules (highest)"
+      },
+      "scores": {
+        "policy_score": 0.40,
+        "adoption_score": 0.35,
+        "overall_score": 0.38,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Hungary",
+      "country_code": "HU",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 63.17,
+        "gov_ai_readiness_rank": 39,
+        "edu_ai_index_score": null,
+        "notes": "Updating strategy"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 23,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "23% teacher AI use (low)"
+      },
+      "scores": {
+        "policy_score": 0.40,
+        "adoption_score": 0.35,
+        "overall_score": 0.38,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Ireland",
+      "country_code": "IE",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 70.58,
+        "gov_ai_readiness_rank": 33,
+        "edu_ai_index_score": null,
+        "notes": "2024 AI guidance for schools; tech hub; no overarching KPIs defined"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 1.995,
+        "notes": "Global AI Index rank 19; strong development pillar"
+      },
+      "scores": {
+        "policy_score": 0.55,
+        "adoption_score": 0.45,
+        "overall_score": 0.50,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Italy",
+      "country_code": "IT",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 68.81,
+        "gov_ai_readiness_rank": 37,
+        "edu_ai_index_score": 3.8,
+        "notes": "Edu AI Index 2nd place; National Digital School Strategy; AI-ENTR4YOUTH pilot"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 25,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 25,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 8.508,
+        "notes": "25% teacher AI use; 25% device access; only 10% school AI access; best operating environment (1st globally)"
+      },
+      "scores": {
+        "policy_score": 0.60,
+        "adoption_score": 0.40,
+        "overall_score": 0.50,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Latvia",
+      "country_code": "LV",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 59.14,
+        "gov_ai_readiness_rank": 52,
+        "edu_ai_index_score": null,
+        "notes": "Updating strategy"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "High teacher turnover intent (~50% young teachers leaving)"
+      },
+      "scores": {
+        "policy_score": 0.35,
+        "adoption_score": 0.30,
+        "overall_score": 0.33,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Lithuania",
+      "country_code": "LT",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 65.31,
+        "gov_ai_readiness_rank": 29,
+        "edu_ai_index_score": null,
+        "notes": "Updating strategy; AI observatory in development"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "High teacher turnover intent (~50% young teachers leaving)"
+      },
+      "scores": {
+        "policy_score": 0.45,
+        "adoption_score": 0.35,
+        "overall_score": 0.40,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Luxembourg",
+      "country_code": "LU",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": 3.75,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 64.28,
+        "gov_ai_readiness_rank": 35,
+        "edu_ai_index_score": null,
+        "notes": "EUR 2.5-5M annually; best infrastructure globally (6th); updating strategy"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "Global AI Index 18th; weak government strategy (44th)"
+      },
+      "scores": {
+        "policy_score": 0.50,
+        "adoption_score": 0.40,
+        "overall_score": 0.45,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Malta",
+      "country_code": "MT",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": 3.75,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 61.48,
+        "gov_ai_readiness_rank": 36,
+        "edu_ai_index_score": null,
+        "notes": "EUR 2.5-5M annually; updating strategy"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 46,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "46% teacher AI use (high - 2nd in EU)"
+      },
+      "scores": {
+        "policy_score": 0.50,
+        "adoption_score": 0.65,
+        "overall_score": 0.58,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Netherlands",
+      "country_code": "NL",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 77.18,
+        "gov_ai_readiness_rank": 5,
+        "edu_ai_index_score": null,
+        "notes": "January 2024 GenAI vision (first in EU); concrete higher ed investments; honourable mention Edu AI Index"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 6.877,
+        "notes": "10% ICT jobs require AI skills; Centre of Excellence for Data Sharing"
+      },
+      "scores": {
+        "policy_score": 0.70,
+        "adoption_score": 0.50,
+        "overall_score": 0.60,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Poland",
+      "country_code": "PL",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 69.14,
+        "gov_ai_readiness_rank": 31,
+        "edu_ai_index_score": null,
+        "notes": "AI Development Policy 2025-2030; PLN 1.84B (EUR 430M) for 16,000 AI classrooms; honourable mention Edu AI Index"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 45,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 9.241,
+        "notes": "45% teacher AI use (high); Generation AI project in Katowice"
+      },
+      "scores": {
+        "policy_score": 0.55,
+        "adoption_score": 0.60,
+        "overall_score": 0.58,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Portugal",
+      "country_code": "PT",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 66.09,
+        "gov_ai_readiness_rank": 27,
+        "edu_ai_index_score": null,
+        "notes": "AI Portugal 2030 strategy via INCoDe.2030; AI-ENTR4YOUTH pilot"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 3.696,
+        "notes": "5% students 'very familiar' with AI (lowest); aging teacher population"
+      },
+      "scores": {
+        "policy_score": 0.50,
+        "adoption_score": 0.40,
+        "overall_score": 0.45,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Romania",
+      "country_code": "RO",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 56.73,
+        "gov_ai_readiness_rank": 49,
+        "edu_ai_index_score": null,
+        "notes": "AI-ENTR4YOUTH participant"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 46,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 43,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 6.74,
+        "notes": "46% teacher AI use (high); 43% device access; 34% AI tool usage (highest)"
+      },
+      "scores": {
+        "policy_score": 0.40,
+        "adoption_score": 0.60,
+        "overall_score": 0.50,
+        "data_quality": "medium"
+      }
+    },
+    {
+      "country": "Slovakia",
+      "country_code": "SK",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2019,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 48.55,
+        "gov_ai_readiness_rank": 53,
+        "edu_ai_index_score": null,
+        "notes": "Strategy exists but limited progress"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": 29,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "29% teacher AI use"
+      },
+      "scores": {
+        "policy_score": 0.35,
+        "adoption_score": 0.40,
+        "overall_score": 0.38,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Slovenia",
+      "country_code": "SI",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2021,
+        "ai_budget_eur_millions": 22.5,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 62.71,
+        "gov_ai_readiness_rank": 45,
+        "edu_ai_index_score": null,
+        "notes": "EUR 22.5M; horizontal AI framework; HPC investments (SLING project)"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "Feedback mechanisms for digital health initiatives"
+      },
+      "scores": {
+        "policy_score": 0.50,
+        "adoption_score": 0.40,
+        "overall_score": 0.45,
+        "data_quality": "low"
+      }
+    },
+    {
+      "country": "Spain",
+      "country_code": "ES",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2020,
+        "strategy_updated": 2024,
+        "ai_budget_eur_millions": 500,
+        "budget_dedicated": true,
+        "gov_ai_readiness_score": 74.22,
+        "gov_ai_readiness_rank": 12,
+        "edu_ai_index_score": 4.6,
+        "notes": "EUR 500M (EUR 390M deployed by 2024); Edu AI Index 1st place; AESIA supervisory agency; AI-ENTR4YOUTH pilot"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": 35,
+        "ai_firm_adoption_pct": null,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": 6.65,
+        "notes": "35% school AI access; LEIA project for Spanish language AI; 20% school AI access (separate measure)"
+      },
+      "scores": {
+        "policy_score": 0.80,
+        "adoption_score": 0.55,
+        "overall_score": 0.68,
+        "data_quality": "high"
+      }
+    },
+    {
+      "country": "Sweden",
+      "country_code": "SE",
+      "policy": {
+        "has_ai_strategy": true,
+        "strategy_year": 2018,
+        "strategy_updated": 2025,
+        "ai_budget_eur_millions": null,
+        "budget_dedicated": false,
+        "gov_ai_readiness_score": 69.45,
+        "gov_ai_readiness_rank": 24,
+        "edu_ai_index_score": null,
+        "notes": "New 2025 digitalisation strategy; horizontal framework; LUMI participation"
+      },
+      "adoption": {
+        "teachers_ai_usage_pct": null,
+        "teachers_ai_training_pct": null,
+        "ai_in_schools_access_pct": null,
+        "ai_firm_adoption_pct": 25,
+        "edtech_startups_pct": null,
+        "ict_graduates_pct": null,
+        "notes": "25%+ firm AI adoption (top 3 EU); 10% ICT jobs require AI skills"
+      },
+      "scores": {
+        "policy_score": 0.60,
+        "adoption_score": 0.50,
+        "overall_score": 0.55,
+        "data_quality": "medium"
+      }
+    }
+  ],
+  "summary_statistics": {
+    "countries_with_ai_strategy": 27,
+    "countries_with_dedicated_budget": 12,
+    "avg_teacher_ai_usage_pct": 32,
+    "eu22_teacher_ai_usage_pct": 32,
+    "highest_teacher_ai_usage": {"country": "Albania (non-EU)", "pct": 52},
+    "highest_eu_teacher_ai_usage": {"country": "Czechia/Malta/Romania", "pct": 46},
+    "lowest_teacher_ai_usage": {"country": "France", "pct": 14},
+    "avg_gov_readiness_score": 65.2,
+    "top_gov_readiness": {"country": "France", "score": 77.31, "rank": 3},
+    "top_edu_ai_index": {"country": "Spain", "score": 4.6}
+  },
+  "data_gaps": {
+    "missing_teacher_ai_data": ["Austria", "Cyprus", "Estonia", "Germany", "Greece", "Ireland", "Latvia", "Lithuania", "Luxembourg", "Netherlands", "Portugal", "Slovenia", "Spain", "Sweden"],
+    "missing_budget_data": ["Austria", "Croatia", "Czechia", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Sweden"],
+    "low_data_quality_countries": ["Bulgaria", "Croatia", "Cyprus", "Greece", "Hungary", "Latvia", "Lithuania", "Luxembourg", "Slovakia", "Slovenia"]
+  }
+}
