@@ -1,28 +1,28 @@
-country,country_code,has_ai_strategy,ai_strategy_year,ai_budget_eur_millions,has_edu_ai_strategy,ai_in_curriculum,ai_curriculum_type,teacher_ai_training_program,edu_ai_pilots,teachers_ai_usage_pct,ai_in_schools_access_pct,gov_ai_readiness_score,edu_policy_coverage,adoption_score,media_score,overall_score,adoption_method,notes
-Germany,DE,1,2018,625.0,1,1.0,integrated,1,1,,44.0,76.78,0.8,1.0,0.15,0.9,partial,KMK AI guidelines 2024; Länder implementing AI curricula
-Sweden,SE,1,2018,,1,1.0,standalone,1,1,,,69.45,1.0,0.75,0.35,0.88,proxy,AI standalone subject; 2025 digitalisation strategy
-Netherlands,NL,1,2019,,1,0.5,piloting,1,1,,,77.18,0.7,1.0,0.3,0.85,proxy,2024 GenAI vision; piloting AI curriculum
-Poland,PL,1,2020,,1,0.0,none,1,1,45.0,,69.14,0.6,0.97,0.1,0.78,partial,PLN 1.84B AI classrooms; Generation AI project
-Estonia,EE,1,2019,31.7,1,1.0,integrated,1,1,,,69.56,0.8,0.75,0.0,0.78,proxy,AI Leap initiative; high school AI pilots; teacher training
-Spain,ES,1,2020,500.0,1,1.0,integrated,1,1,,35.0,74.22,0.8,0.62,0.15,0.71,partial,Edu AI Index 1st; #CompDigEdu framework; AI-ENTR4YOUTH
-Denmark,DK,1,2019,225.5,1,1.0,integrated,1,1,31.0,,74.75,0.8,0.53,0.3,0.66,partial,2024-2027 strategy; EUR 25.5M edu budget; AI in schools framework
-Finland,FI,1,2017,200.0,1,1.0,integrated,1,1,27.0,,70.3,0.8,0.41,0.25,0.6,partial,Elements of AI MOOC; AI in new curriculum 2025
-Austria,AT,1,2021,,0,0.0,none,1,0,,44.0,69.72,0.2,1.0,0.15,0.6,partial,Strategy reviewed 2024; DACH region 40% school AI access
-Czechia,CZ,1,2019,,0,0.0,none,0,1,46.0,,64.56,0.2,1.0,0.15,0.6,partial,Strategy revised 2024; AI-ENTR4YOUTH participant; no state edu AI strategy
-Romania,RO,1,2020,,0,0.0,none,0,1,46.0,43.0,56.73,0.2,0.98,0.25,0.59,measured,High teacher AI use; AI-ENTR4YOUTH
-Malta,MT,1,2019,3.75,0,0.0,none,0,0,46.0,,61.48,0.0,1.0,0.0,0.5,partial,High teacher AI use; no formal edu AI strategy
-Ireland,IE,1,2021,,0,0.0,none,1,0,,,70.58,0.2,0.79,1.0,0.5,proxy,2024 AI guidance; AI via digital literacy; no explicit curriculum
-Portugal,PT,1,2019,,0,0.0,none,1,1,,,66.09,0.4,0.61,0.3,0.5,proxy,Digital Transition Plan; AI-ENTR4YOUTH
-Italy,IT,1,2021,,1,0.5,piloting,1,1,25.0,25.0,68.81,0.7,0.28,0.2,0.49,measured,Edu AI Index 2nd; AI-ENTR4YOUTH; piloting AI curriculum
-France,FR,1,2018,1000.0,1,1.0,integrated,1,1,14.0,20.0,77.31,0.8,0.0,0.1,0.4,measured,EUR 4B strategy; AI-ENTR4YOUTH; low teacher adoption
-Belgium,BE,1,2019,153.5,0,0.0,none,1,0,31.5,,65.17,0.2,0.55,0.25,0.38,partial,Flemish 40% + French 23% teachers AI; Flanders EUR 35M policy + EUR 118.5M R&I
-Slovenia,SI,1,2021,22.5,0,0.5,piloting,0,1,,,62.71,0.3,0.46,0.0,0.38,proxy,Piloting AI curriculum integration
-Greece,GR,1,2021,,0,0.5,piloting,0,1,,29.0,60.51,0.3,0.38,0.5,0.34,partial,Piloting AI integration; AI-ENTR4YOUTH
-Croatia,HR,1,2021,,1,1.0,standalone,0,0,,,49.79,0.6,0.0,0.0,0.3,proxy,AI standalone subject in curriculum
-Lithuania,LT,1,2019,,0,0.0,none,0,0,,,65.31,0.0,0.57,0.0,0.28,proxy,AI observatory in development
-Luxembourg,LU,1,2019,3.75,0,0.0,none,0,0,,,64.28,0.0,0.53,0.0,0.26,proxy,EUR 2.5-5M annually; best infrastructure
-Slovakia,SK,1,2019,,0,0.0,none,0,0,29.0,,48.55,0.0,0.47,0.0,0.24,partial,29% teacher AI use; no edu AI strategy
-Bulgaria,BG,1,2020,12.5,0,0.0,none,0,1,22.0,,56.6,0.2,0.25,0.0,0.22,partial,AI budget EUR 5-20M range; AI-ENTR4YOUTH participant
-Cyprus,CY,1,2020,3.75,0,0.0,none,0,0,,,59.71,0.0,0.34,0.0,0.17,proxy,EUR 2.5-5M annually; updating strategy
-Latvia,LV,1,2020,,0,0.0,none,0,0,,,59.14,0.0,0.31,0.0,0.16,proxy,No explicit AI in curriculum
-Hungary,HU,1,2020,,0,0.0,none,0,0,23.0,,63.17,0.0,0.28,0.2,0.14,partial,No explicit AI in curriculum
+country,country_code,has_ai_strategy,ai_strategy_year,ai_budget_eur_millions,has_edu_ai_strategy,ai_in_curriculum,ai_curriculum_type,teacher_ai_training_program,edu_ai_pilots,teachers_ai_usage_pct,eurostat_genai_pct,ai_in_schools_access_pct,gov_ai_readiness_score,edu_policy_coverage,adoption_score,media_score,overall_score,adoption_method,notes
+Sweden,SE,1,2018,,1,1.0,standalone,1,1,31.0,42.0,,69.45,1.0,0.66,0.35,0.83,both,AI standalone subject; 2025 digitalisation strategy
+Denmark,DK,1,2019,225.5,1,1.0,integrated,1,1,36.0,48.4,,74.75,0.8,0.84,0.3,0.82,both,2024-2027 strategy; EUR 25.5M edu budget; AI in schools framework
+Estonia,EE,1,2019,31.7,1,1.0,integrated,1,1,35.0,46.6,,69.56,0.8,0.8,0.0,0.8,both,AI Leap initiative; high school AI pilots; teacher training
+Netherlands,NL,1,2019,,1,0.5,piloting,1,1,37.0,44.7,,77.18,0.7,0.8,0.3,0.75,both,2024 GenAI vision; piloting AI curriculum
+Finland,FI,1,2017,200.0,1,1.0,integrated,1,1,27.0,46.3,,70.3,0.8,0.67,0.25,0.74,both,Elements of AI MOOC; AI in new curriculum 2025
+Spain,ES,1,2020,500.0,1,1.0,integrated,1,1,35.0,37.9,35.0,74.22,0.8,0.66,0.15,0.73,both,Edu AI Index 1st; #CompDigEdu framework; AI-ENTR4YOUTH
+Germany,DE,1,2018,625.0,1,1.0,integrated,1,1,,32.3,44.0,76.78,0.8,0.47,0.15,0.64,eurostat_only,KMK AI guidelines 2024; Länder implementing AI curricula
+Poland,PL,1,2020,,1,0.0,none,1,1,45.0,22.7,,69.14,0.6,0.56,0.1,0.58,both,PLN 1.84B AI classrooms; Generation AI project
+Greece,GR,1,2021,,0,0.5,piloting,0,1,,44.1,29.0,60.51,0.3,0.86,0.5,0.58,eurostat_only,Piloting AI integration; AI-ENTR4YOUTH
+France,FR,1,2018,1000.0,1,1.0,integrated,1,1,14.0,37.5,20.0,77.31,0.8,0.32,0.1,0.56,both,EUR 4B strategy; AI-ENTR4YOUTH; low teacher adoption
+Ireland,IE,1,2021,,0,0.0,none,1,0,,44.9,,70.58,0.2,0.89,1.0,0.55,eurostat_only,2024 AI guidance; AI via digital literacy; no explicit curriculum
+Portugal,PT,1,2019,,0,0.0,none,1,1,30.0,38.7,,66.09,0.4,0.59,0.3,0.5,both,Digital Transition Plan; AI-ENTR4YOUTH
+Czechia,CZ,1,2019,,0,0.0,none,0,1,46.0,35.4,,64.56,0.2,0.79,0.15,0.5,both,Strategy revised 2024; AI-ENTR4YOUTH participant; no state edu AI strategy
+Malta,MT,1,2019,3.75,0,0.0,none,0,0,46.0,46.5,,61.48,0.0,0.97,0.0,0.48,both,High teacher AI use; no formal edu AI strategy
+Slovenia,SI,1,2021,22.5,0,0.5,piloting,0,1,,37.6,,62.71,0.3,0.65,0.0,0.48,eurostat_only,Piloting AI curriculum integration
+Austria,AT,1,2021,,0,0.0,none,1,0,39.0,39.4,44.0,69.72,0.2,0.74,0.15,0.47,both,Strategy reviewed 2024; DACH region 40% school AI access
+Croatia,HR,1,2021,,1,1.0,standalone,0,0,,27.5,,49.79,0.6,0.32,0.0,0.46,eurostat_only,AI standalone subject in curriculum
+Italy,IT,1,2021,,1,0.5,piloting,1,1,25.0,19.9,25.0,68.81,0.7,0.21,0.2,0.45,both,Edu AI Index 2nd; AI-ENTR4YOUTH; piloting AI curriculum
+Belgium,BE,1,2019,153.5,0,0.0,none,1,0,33.0,42.0,,65.17,0.2,0.69,0.25,0.44,both,Flemish 40% + French 23% teachers AI; Flanders EUR 35M policy + EUR 118.5M R&I
+Cyprus,CY,1,2020,3.75,0,0.0,none,0,0,,44.2,,59.71,0.0,0.86,0.0,0.43,eurostat_only,EUR 2.5-5M annually; updating strategy
+Luxembourg,LU,1,2019,3.75,0,0.0,none,0,0,,42.5,,64.28,0.0,0.81,0.0,0.4,eurostat_only,EUR 2.5-5M annually; best infrastructure
+Romania,RO,1,2020,,0,0.0,none,0,1,46.0,17.8,43.0,56.73,0.2,0.5,0.25,0.35,both,High teacher AI use; AI-ENTR4YOUTH
+Lithuania,LT,1,2019,,0,0.0,none,0,0,39.0,36.9,,65.31,0.0,0.7,0.0,0.35,both,AI observatory in development
+Latvia,LV,1,2020,,0,0.0,none,0,0,35.0,33.4,,59.14,0.0,0.58,0.0,0.29,both,No explicit AI in curriculum
+Slovakia,SK,1,2019,,0,0.0,none,0,0,29.0,30.8,,48.55,0.0,0.45,0.0,0.22,both,29% teacher AI use; no edu AI strategy
+Bulgaria,BG,1,2020,12.5,0,0.0,none,0,1,22.0,22.5,,56.6,0.2,0.2,0.0,0.2,both,AI budget EUR 5-20M range; AI-ENTR4YOUTH participant
+Hungary,HU,1,2020,,0,0.0,none,0,0,23.0,29.6,,63.17,0.0,0.33,0.2,0.16,both,No explicit AI in curriculum

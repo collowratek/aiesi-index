@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-AIESI Index v5 — Data Recalculation
+AIESI Index v6 — Data Recalculation
 
-Two-dimensional index:
+Two-dimensional index with verified adoption data:
 1. edu_policy_coverage (50%) — checklist of AI-in-education policies
-2. adoption_score (50%) — teacher AI usage + school AI access
+2. adoption_score (50%) — from two independent sources:
+   a) TALIS 2024 (OECD): % teachers using AI (20/27 EU countries)
+   b) Eurostat 2025: % population using generative AI (27/27)
 
-media_score retained in CSV as informational column but excluded from
-overall_score due to fundamental validity issue (single English-language
-Google Trends query → measures anglophone bias, not actual media salience).
+No more proxy imputation from gov_ai_readiness (rho=0.07).
+media_score retained in CSV as informational column only.
 """
 
 import pandas as pd
@@ -34,81 +35,57 @@ def main():
     print(f"Loaded {n} countries\n")
 
     # ================================================================
-    # 1. ADOPTION SCORE — transparent recalculation
+    # 1. ADOPTION SCORE — two independent sources
     # ================================================================
-    # Available indicators
-    has_teachers = df['teachers_ai_usage_pct'].notna()
-    has_access = df['ai_in_schools_access_pct'].notna()
-    has_any = has_teachers | has_access
-    has_both = has_teachers & has_access
-    has_neither = ~has_any
+    has_talis = df['teachers_ai_usage_pct'].notna()
+    has_eurostat = df['eurostat_genai_pct'].notna()
 
     print("=== ADOPTION DATA AVAILABILITY ===")
-    print(f"  teachers_ai_usage_pct:      {has_teachers.sum()}/{n}")
-    print(f"  ai_in_schools_access_pct:   {has_access.sum()}/{n}")
-    print(f"  Both indicators:            {has_both.sum()}/{n}")
-    print(f"  At least one:               {has_any.sum()}/{n}")
-    print(f"  Neither (need proxy):       {has_neither.sum()}/{n}")
+    print(f"  TALIS 2024 (teachers AI %):     {has_talis.sum()}/{n}")
+    print(f"  Eurostat 2025 (GenAI pop %):    {has_eurostat.sum()}/{n}")
+    print(f"  Both sources:                   {(has_talis & has_eurostat).sum()}/{n}")
 
-    # Normalize available indicators to [0,1]
-    teachers_norm = minmax(df['teachers_ai_usage_pct'])
-    access_norm = minmax(df['ai_in_schools_access_pct'])
+    # Normalize each to [0,1]
+    talis_norm = minmax(df['teachers_ai_usage_pct'])
+    eurostat_norm = minmax(df['eurostat_genai_pct'])
 
-    # Pairwise mean of available normalized indicators
+    # Cross-validate: correlation between the two indicators
+    both = has_talis & has_eurostat
+    if both.sum() >= 5:
+        cross_rho = spearman(talis_norm[both], eurostat_norm[both])
+        print(f"\n  Cross-validation: rho(TALIS_norm, Eurostat_norm) = {cross_rho:.3f}")
+        print(f"  (n={both.sum()} countries with both sources)")
+
+    # Adoption = mean of available normalized indicators
     adoption = pd.Series(np.nan, index=df.index)
-    adoption[has_both] = (teachers_norm[has_both] + access_norm[has_both]) / 2
-    only_t = has_teachers & ~has_access
-    only_a = has_access & ~has_teachers
-    adoption[only_t] = teachers_norm[only_t]
-    adoption[only_a] = access_norm[only_a]
 
-    # --- Proxy imputation for missing countries ---
-    # Use gov_ai_readiness_score as proxy (available for all 27)
-    gov_norm = minmax(df['gov_ai_readiness_score'])
+    # Both sources available: average
+    adoption[both] = (talis_norm[both] + eurostat_norm[both]) / 2
 
-    # Validate proxy: Spearman correlation with measured adoption
-    measured = adoption.notna()
-    proxy_rho = spearman(adoption[measured], gov_norm[measured])
-    print(f"\n  Proxy validation: rho(measured_adoption, gov_readiness) = {proxy_rho:.3f}")
-    print(f"  (n={measured.sum()} countries with measured adoption)")
+    # Only Eurostat (7 countries: DE, IE, HR, SI, CY, EL, LU)
+    only_eurostat = ~has_talis & has_eurostat
+    adoption[only_eurostat] = eurostat_norm[only_eurostat]
 
-    # Scale proxy to match measured adoption distribution
-    m_mean = adoption[measured].mean()
-    m_std = adoption[measured].std()
-    g_mean = gov_norm[measured].mean()
-    g_std = gov_norm[measured].std()
-
-    if g_std > 0:
-        proxy_scaled = m_mean + (gov_norm - g_mean) * (m_std / g_std)
-    else:
-        proxy_scaled = gov_norm
-    proxy_scaled = proxy_scaled.clip(0, 1)
-
-    # Fill missing
-    adoption[has_neither] = proxy_scaled[has_neither]
     df['adoption_score'] = adoption.round(2)
 
     # Quality flag
-    df['adoption_method'] = 'proxy'
-    df.loc[has_both, 'adoption_method'] = 'measured'
-    df.loc[has_any & ~has_both, 'adoption_method'] = 'partial'
+    df['adoption_method'] = 'eurostat_only'
+    df.loc[both, 'adoption_method'] = 'both'
 
     print(f"\n  Method breakdown:")
-    print(f"    measured (both indicators): {has_both.sum()}")
-    print(f"    partial (one indicator):    {(has_any & ~has_both).sum()}")
-    print(f"    proxy (gov_readiness):      {has_neither.sum()}")
+    print(f"    both (TALIS + Eurostat): {both.sum()}")
+    print(f"    eurostat_only:           {only_eurostat.sum()}")
 
     print(f"\n  Country details:")
     for _, r in df.sort_values('adoption_score', ascending=False).iterrows():
-        t = f"t={r['teachers_ai_usage_pct']:.0f}%" if pd.notna(r['teachers_ai_usage_pct']) else "t=NA"
-        a = f"a={r['ai_in_schools_access_pct']:.0f}%" if pd.notna(r['ai_in_schools_access_pct']) else "a=NA"
-        print(f"    {r['country']:15s} → {r['adoption_score']:.2f}  [{r['adoption_method']:8s}]  ({t}, {a})")
+        t = f"T={r['teachers_ai_usage_pct']:.0f}%" if pd.notna(r['teachers_ai_usage_pct']) else "T=—"
+        e = f"E={r['eurostat_genai_pct']:.0f}%" if pd.notna(r['eurostat_genai_pct']) else "E=—"
+        print(f"    {r['country']:15s} → {r['adoption_score']:.2f}  "
+              f"[{r['adoption_method']:14s}]  ({t}, {e})")
 
     # ================================================================
     # 2. OVERALL SCORE — two dimensions, 50/50
     # ================================================================
-    # media_score excluded: single English Google Trends query measures
-    # anglophone bias, not actual media salience (Ireland = 1.0, 10 countries = 0.0)
     W_POLICY = 0.5
     W_ADOPTION = 0.5
 
@@ -117,7 +94,7 @@ def main():
         W_ADOPTION * df['adoption_score']
     ).round(2)
 
-    print(f"\n=== SCORES (P:{W_POLICY} A:{W_ADOPTION}, media excluded) ===")
+    print(f"\n=== SCORES (P:{W_POLICY} A:{W_ADOPTION}) ===")
     for _, r in df.sort_values('overall_score', ascending=False).iterrows():
         print(f"  {r['country']:15s}  overall={r['overall_score']:.2f}  "
               f"(P:{r['edu_policy_coverage']:.1f} A:{r['adoption_score']:.2f})")
@@ -178,15 +155,15 @@ def main():
               f"min={s.min():.2f}, max={s.max():.2f}, median={s.median():.2f}")
 
     # ================================================================
-    # 6. CLEAN OUTPUT — media_score kept as informational column
+    # 6. CLEAN OUTPUT
     # ================================================================
     out_cols = [
         'country', 'country_code',
         'has_ai_strategy', 'ai_strategy_year', 'ai_budget_eur_millions',
         'has_edu_ai_strategy', 'ai_in_curriculum', 'ai_curriculum_type',
         'teacher_ai_training_program', 'edu_ai_pilots',
-        'teachers_ai_usage_pct', 'ai_in_schools_access_pct',
-        'gov_ai_readiness_score',
+        'teachers_ai_usage_pct', 'eurostat_genai_pct',
+        'ai_in_schools_access_pct', 'gov_ai_readiness_score',
         'edu_policy_coverage', 'adoption_score', 'media_score', 'overall_score',
         'adoption_method', 'notes'
     ]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate AIESI Methodology PDF v5 — two-dimensional index"""
+"""Generate AIESI Methodology PDF v6 — two-dimensional index with TALIS + Eurostat"""
 
 from fpdf import FPDF
 import os
@@ -14,7 +14,7 @@ class MethodologyPDF(FPDF):
     def header(self):
         self.set_font('DejaVu', '', 9)
         self.set_text_color(150, 150, 150)
-        self.cell(0, 10, 'AIESI Index v5 – Metodologie', align='R')
+        self.cell(0, 10, 'AIESI Index v6 – Metodologie', align='R')
         self.ln(12)
 
     def footer(self):
@@ -84,7 +84,7 @@ def create_methodology_pdf():
     pdf.set_text_color(100, 100, 100)
     pdf.cell(0, 6, 'AI in Education Salience Index')
     pdf.ln(5)
-    pdf.cell(0, 6, 'Metodologický dokument v5')
+    pdf.cell(0, 6, 'Metodologický dokument v6')
     pdf.ln(12)
 
     # ============================================================
@@ -127,38 +127,45 @@ def create_methodology_pdf():
         'financování. Pro budoucí verze doporučujeme doplnit kvantitativní indikátor investic.'
     )
 
-    # 2.2 Adoption
+    # 2.2 Adoption — REWRITTEN for v6
     pdf.section_title('2.2 Praktická adopce (adoption_score)')
     pdf.body_text(
-        'Měří skutečné využívání AI nástrojů ve vzdělávání na základě dostupných kvantitativních dat.'
+        'Měří skutečné využívání AI nástrojů na základě dvou nezávislých, verifikovaných zdrojů:'
     )
-    pdf.bullet('teachers_ai_usage_pct – Procento učitelů používajících AI nástroje')
-    pdf.bullet('ai_in_schools_access_pct – Procento škol s přístupem k AI nástrojům')
+    pdf.bullet('TALIS 2024 (OECD) – procento učitelů nižšího sekundárního vzdělávání '
+               'používajících AI nástroje. Pokrytí: 20/27 zemí EU.')
+    pdf.bullet('Eurostat 2025 (isoc_ai_iaiu) – procento populace (16–74 let) '
+               'používající generativní AI nástroje. Pokrytí: 27/27 zemí EU.')
     pdf.ln(2)
-    pdf.body_text('Vzorec (průměr dostupných normalizovaných indikátorů):')
-    pdf.formula('adoption = mean(teachers_norm, access_norm)  [pairwise available]')
-    pdf.body_text('Normalizace: min-max na škálu 0–1 pro každý indikátor zvlášť (N=27).')
+    pdf.body_text('Postup výpočtu:')
+    pdf.bullet('Oba indikátory normalizovány min-max na škálu 0–1 (N=27).')
+    pdf.bullet('Pro 20 zemí s oběma zdroji: adoption = průměr obou normalizovaných hodnot.')
+    pdf.bullet('Pro 7 zemí pouze s Eurostat (DE, IE, HR, SI, CY, EL, LU): '
+               'adoption = normalizovaná hodnota Eurostat.')
     pdf.ln(2)
+    pdf.body_text('Vzorec:')
+    pdf.formula('adoption = mean(TALIS_norm, Eurostat_norm)  [pairwise available]')
 
-    pdf.section_title('2.2.1 Dostupnost dat a imputace')
+    pdf.section_title('2.2.1 Křížová validace zdrojů')
     pdf.body_text(
-        'Kritický problém této dimenze je neúplnost dat. Z 27 zemí EU:'
+        'Spearmanova korelace mezi normalizovanými hodnotami TALIS a Eurostat '
+        'u 20 zemí s oběma zdroji činí ρ = 0,15. Nízká korelace je očekávaná: '
+        'TALIS měří specificky učitele ve školách, zatímco Eurostat měří obecnou populaci. '
+        'Jde o odlišné konstrukty — učitelská adopce AI ≠ populační využívání GenAI. '
+        'Právě proto je jejich kombinace informativnější než každý zdroj zvlášť.'
     )
-    pdf.bullet('3 země mají oba indikátory (Francie, Itálie, Rumunsko) – metoda: „measured"')
-    pdf.bullet('13 zemí má jeden indikátor – metoda: „partial"')
-    pdf.bullet('11 zemí nemá žádný přímý indikátor – metoda: „proxy"')
-    pdf.ln(2)
+
+    pdf.section_title('2.2.2 Kvalita dat oproti v5')
     pdf.body_text(
-        'Pro 11 zemí bez přímých dat byla adoption_score odhadnuta pomocí proxy proměnné '
-        'Government AI Readiness Score (Oxford Insights), lineárně přeškálované na distribuci '
-        'měřených hodnot (matching mean a SD).'
+        'V předchozích verzích (v1–v5) byla adoption_score založena na heterogenních '
+        'zdrojích: teachers_ai_usage_pct (12/27 zemí), ai_in_schools_access_pct (GoStudent, 7/27) '
+        'a proxy odhad z Government AI Readiness (Oxford Insights) pro 11 zemí bez dat '
+        '(ρ = 0,07 s měřenými hodnotami — prakticky náhodný).'
     )
     pdf.body_text(
-        'Validace proxy: Spearmanova korelace mezi měřenou adoption a gov_ai_readiness '
-        'u 16 zemí s daty činí ρ = 0,07. Tato nízká korelace znamená, že proxy odhady '
-        'mají omezenou prediktivní hodnotu a výsledky pro 11 „proxy" zemí je třeba interpretovat '
-        'se zvýšenou opatrností. V datovém souboru je metoda imputace označena ve sloupci '
-        '„adoption_method".'
+        'Ve verzi v6 jsou obě datové řady z oficiálních statistických šetření '
+        '(OECD TALIS, Eurostat) s transparentní metodologií sběru. Žádná země '
+        'nemá proxy imputaci — všech 27 zemí má alespoň jeden přímý zdroj.'
     )
 
     # 2.3 Excluded indicator
@@ -175,12 +182,9 @@ def create_methodology_pdf():
                '— Irsko (nativně anglicky mluvící) = 1,0; 10 zemí = 0,0.')
     pdf.bullet('Žádná diskriminační síla pro třetinu vzorku (10/27 zemí se skóre 0,0).')
     pdf.bullet('Neodráží odborný diskurz ani veřejnou debatu v národních jazycích.')
-    pdf.bullet('Zahrnutí indikátoru s nízkou validitou oslabuje celkový index.')
     pdf.ln(2)
     pdf.body_text(
-        'Data media_score zůstávají v CSV souboru jako informativní sloupec. '
-        'Pro budoucí verze doporučujeme alternativní operacionalizaci: '
-        'lokální jazykové dotazy, počet odborných článků, parlamentní diskuse.'
+        'Data media_score zůstávají v CSV souboru jako informativní sloupec.'
     )
 
     pdf.add_page()
@@ -200,16 +204,16 @@ def create_methodology_pdf():
     )
     pdf.bullet('Obě dimenze přímo měří aktivitu států v oblasti AI ve vzdělávání — '
                'policy_coverage zachycuje systémový rámec, adoption praktickou implementaci.')
-    pdf.bullet('Nízká vzájemná korelace dimenzí (Spearman ρ = 0,08) potvrzuje, že zachycují '
+    pdf.bullet('Záporná vzájemná korelace dimenzí (Spearman ρ = −0,16) potvrzuje, že zachycují '
                'odlišné aspekty — existence politik negarantuje adopci a naopak.')
     pdf.bullet('Bez silného teoretického důvodu pro asymetrii jsou rovné váhy '
                'nejtransparentnějším a nejobhajitelnějším přístupem.')
-    pdf.bullet('Pro explorativní nástroj s N=27 a heterogenní kvalitou dat je expertní '
+    pdf.bullet('Pro explorativní nástroj s N=27 je expertní '
                'vážení transparentnějším přístupem než statistické metody (PCA).')
     pdf.ln(2)
     pdf.body_text(
         'Citlivostní analýza (viz kapitola 8) potvrzuje, že pořadí zemí je stabilní '
-        'při změnách poměru vah v rozsahu 20/80 až 80/20 (Spearmanovo ρ ≥ 0,85).'
+        'při změnách poměru vah v rozsahu 20/80 až 80/20 (Spearmanovo ρ ≥ 0,71).'
     )
 
     # ============================================================
@@ -217,23 +221,21 @@ def create_methodology_pdf():
     # ============================================================
     pdf.chapter_title('4. Zdroje dat')
 
-    pdf.section_title('Primární zdroje')
-    pdf.bullet('OECD TALIS 2024 – Teaching and Learning International Survey')
+    pdf.section_title('Primární zdroje — adopce')
+    pdf.bullet('OECD TALIS 2024 – % učitelů nižšího sekundárního vzdělávání používajících AI (20/27 EU)')
     pdf.link_text('   ', 'https://www.oecd.org/education/talis/')
+    pdf.bullet('Eurostat 2025 – % populace (16–74) používající generativní AI (dataset isoc_ai_iaiu, 27/27 EU)')
+    pdf.link_text('   ', 'https://ec.europa.eu/eurostat/databrowser/view/isoc_ai_iaiu/')
+
+    pdf.section_title('Primární zdroje — politiky')
     pdf.bullet('European Schoolnet 2024 – Agile Collection: AI in School Education')
     pdf.link_text('   ', 'https://www.eun.org/news/detail?articleId=13572286')
-    pdf.bullet('Oxford Insights Government AI Readiness Index 2025')
-    pdf.link_text('   ', 'https://oxfordinsights.com/ai-readiness/ai-readiness-index/')
-    pdf.bullet('GoStudent European Educational AI Index 2025')
-    pdf.link_text('   ', 'https://www.gostudent.org/en-gb/blog/which-country-is-best-for-ai-in-education')
-    pdf.bullet('Google Trends 2024 (media_score — vyloučen z overall, viz 2.3)')
-    pdf.link_text('   ', 'https://trends.google.com/')
 
     pdf.section_title('Sekundární zdroje')
+    pdf.bullet('Oxford Insights Government AI Readiness Index 2025')
+    pdf.link_text('   ', 'https://oxfordinsights.com/ai-readiness/ai-readiness-index/')
     pdf.bullet('OECD AI Policy Observatory')
     pdf.link_text('   ', 'https://oecd.ai/')
-    pdf.bullet('EU AI Act – oficiální dokumentace')
-    pdf.link_text('   ', 'https://artificialintelligenceact.eu/')
 
     # ============================================================
     # 5. Omezení a limitace
@@ -242,11 +244,11 @@ def create_methodology_pdf():
     pdf.body_text('Při interpretaci dat je třeba zohlednit následující omezení:')
 
     pdf.section_title('5.1 Datová omezení')
-    pdf.bullet('Adoption data: Pouze 3/27 zemí mají oba indikátory, 11 zemí nemá žádný přímý '
-               'indikátor adopce (odhadnuto proxy z gov. AI readiness, ρ = 0,07).')
+    pdf.bullet('TALIS 2024: 7 zemí EU se nezúčastnilo nebo data nebyla publikována '
+               '(DE, IE, HR, SI, CY, EL, LU) — jejich adopce je založena pouze na Eurostat.')
     pdf.bullet('Policy data: Založena na sebehodnocení zemí (European Schoolnet survey) '
                '— možný reporting bias.')
-    pdf.bullet('TALIS data nejsou dostupná pro všechny země (chybí např. Estonsko, Německo).')
+    pdf.bullet('Eurostat měří obecnou populaci, ne specificky vzdělávací sektor.')
     pdf.bullet('Soukromé iniciativy nejsou zahrnuty do dimenze pokrytí politik.')
 
     pdf.section_title('5.2 Metodická omezení')
@@ -256,8 +258,7 @@ def create_methodology_pdf():
                'intenzitu či financování.')
     pdf.bullet('Rovné váhy (50/50) nejsou empiricky validovány. Citlivostní analýza '
                'ukazuje stabilitu pořadí, ale neprokáže optimalitu vah.')
-    pdf.bullet('N = 27. Malý vzorek limituje možnost statistické inference a zvyšuje '
-               'citlivost na jednotlivá pozorování.')
+    pdf.bullet('N = 27. Malý vzorek limituje možnost statistické inference.')
 
     pdf.add_page()
 
@@ -266,27 +267,33 @@ def create_methodology_pdf():
     # ============================================================
     pdf.chapter_title('6. Poznámky k vybraným zemím')
 
-    pdf.section_title('Německo (DE) — 1. místo, skóre 0,90')
+    pdf.section_title('Švédsko (SE) — 1. místo, skóre 0,83')
     pdf.body_text(
-        'Německo dosahuje nejvyššího celkového skóre díky vysokému policy_coverage (0,8) '
-        'a maximální normalizované adopci (1,0). KMK AI guidelines 2024 pokrývají '
-        'integraci do kurikula na úrovni spolkových zemí. Adoption částečně založena '
-        'na jednom indikátoru (ai_in_schools_access = 44 %) — metoda „partial".'
+        'Švédsko dosahuje nejvyššího celkového skóre díky maximálnímu policy_coverage (1,0) '
+        'a solidní adopci (0,66). Má AI jako samostatný předmět v kurikulu a komplexní '
+        'digitalizační strategii 2025. TALIS: 31 % učitelů, Eurostat: 42 % populace.'
     )
 
-    pdf.section_title('Česko (CZ) — 10. místo, skóre 0,60')
+    pdf.section_title('Česko (CZ) — 12. místo, skóre 0,50')
     pdf.body_text(
-        'Česko má paradoxně nejvyšší měřenou adopci učitelů v EU (46 %), '
+        'Česko má jednu z nejvyšších měřených adopcí učitelů v EU (TALIS: 46 %), '
         'ale nízké pokrytí politik (0,2). Neexistuje explicitní strategie AI '
         've vzdělávání ani začlenění do kurikula. Typický případ bottom-up adopce '
         'bez systémové politické podpory.'
     )
 
-    pdf.section_title('Francie (FR) — 16. místo, skóre 0,40')
+    pdf.section_title('Francie (FR) — 10. místo, skóre 0,56')
     pdf.body_text(
         'Paradox indexu: Francie investuje 1 mld. EUR do AI strategie a má vysoké '
-        'policy_coverage (0,8), ale nejnižší měřenou adopci učitelů v EU (14 %). '
+        'policy_coverage (0,8), ale nejnižší měřenou adopci učitelů v EU (TALIS: 14 %). '
         'Ilustruje omezení checklistu — existence politik nezaručuje implementaci.'
+    )
+
+    pdf.section_title('Německo (DE) — 7. místo, skóre 0,64')
+    pdf.body_text(
+        'Německo se nezúčastnilo TALIS 2024, jeho adopce je založena pouze na Eurostat '
+        '(32,3 % populace s GenAI). Vysoké policy_coverage (0,8) díky KMK AI guidelines 2024. '
+        'Adopce (0,47) je metodou „eurostat_only" — interpretovat s opatrností.'
     )
 
     # ============================================================
@@ -300,9 +307,7 @@ def create_methodology_pdf():
     pdf.ln(2)
     pdf.body_text(
         'Hranice kategorií jsou orientační. Pro detailnější analýzu doporučujeme '
-        'zkoumat jednotlivé dimenze zvlášť. Skóre zaokrouhlujeme na 1 desetinné '
-        'místo — přesnost na 2 desetinná místa by implikovala falešnou přesnost '
-        'vzhledem k N=27 a kvalitě vstupních dat.'
+        'zkoumat jednotlivé dimenze zvlášť.'
     )
 
     # ============================================================
@@ -323,23 +328,22 @@ def create_methodology_pdf():
     )
 
     pdf.section_title('8.2 Výsledky')
-    pdf.bullet('Spearmanovo ρ: min = 0,846, průměr = 0,941, max = 0,999')
-    pdf.bullet('77 % kombinací má ρ ≥ 0,90')
-    pdf.bullet('46 % kombinací má ρ ≥ 0,95')
-    pdf.bullet('Top-5 zemí identická v 54 % kombinací')
+    pdf.bullet('Spearmanovo ρ: min = 0,709, průměr = 0,912, max = 1,000')
+    pdf.bullet('77 % kombinací má ρ ≥ 0,90 (10/13)')
+    pdf.bullet('31 % kombinací má ρ ≥ 0,95 (4/13)')
+    pdf.bullet('Top-5 zemí identická v 46 % kombinací (6/13)')
     pdf.ln(2)
     pdf.body_text(
         'Závěr: Pořadí zemí je robustní v širokém rozsahu vah. K výrazným změnám '
-        'dochází pouze při extrémních poměrech (20/80 nebo 80/20), kde jedna dimenze '
-        'dominuje. V rozumném rozsahu 30/70 až 70/30 je ρ ≥ 0,90.'
+        'dochází pouze při extrémních poměrech (20/80), kde jedna dimenze dominuje.'
     )
 
     pdf.section_title('8.3 Korelace dimenzí (Spearman)')
     pdf.body_text(
-        'Spearman ρ(policy_coverage, adoption) = 0,08 (N=27). '
-        'Nízká korelace potvrzuje, že existence politik a skutečná adopce jsou '
-        'do značné míry nezávislé dimenze, což podporuje jejich oddělené zahrnutí '
-        'v indexu a validitu dvoudimenzionálního modelu.'
+        'Spearman ρ(policy_coverage, adoption) = −0,16 (N=27). '
+        'Záporná korelace potvrzuje, že existence politik a skutečná adopce jsou '
+        'nezávislé dimenze. Země s vysokou politickou aktivitou nemusí mít vysokou adopci '
+        '(Francie) a naopak (Malta, Česko). To podporuje dvoudimenzionální model.'
     )
 
     pdf.add_page()
@@ -361,7 +365,7 @@ def create_methodology_pdf():
     pdf.bullet('Predikci vzdělávacích výsledků či úspěšnosti studentů')
     pdf.bullet('Hodnocení kvality konkrétních AI nástrojů ve školách')
     pdf.bullet('Kauzální závěry o vztahu politiky a adopce')
-    pdf.bullet('Statistickou inferenci (N=27, heterogenní kvalita dat)')
+    pdf.bullet('Statistickou inferenci (N=27)')
 
     # ============================================================
     # 10. Deskriptivní statistiky
@@ -380,9 +384,9 @@ def create_methodology_pdf():
     pdf.ln()
     pdf.set_font('DejaVu', '', 10)
     for label, vals in [
-        ('Overall score', (0.49, 0.23, 0.14, 0.90, 0.50)),
+        ('Overall score', (0.51, 0.19, 0.16, 0.83, 0.48)),
         ('Policy coverage', (0.39, 0.34, 0.00, 1.00, 0.30)),
-        ('Adoption', (0.59, 0.31, 0.00, 1.00, 0.55)),
+        ('Adoption', (0.63, 0.21, 0.20, 0.97, 0.66)),
     ]:
         pdf.cell(55, 6, label, border=1)
         for v in vals:
@@ -393,14 +397,22 @@ def create_methodology_pdf():
     # 11. Aktualizace
     # ============================================================
     pdf.ln(4)
-    pdf.chapter_title('11. Aktualizace dat')
-    pdf.body_text('Data sebrána: leden 2025.')
-    pdf.body_text('Předpokládaná frekvence aktualizace: ročně.')
+    pdf.chapter_title('11. Historie verzí')
     pdf.body_text(
-        'Verze v5: Vyloučen media_score z celkového skóre (fundamentální validitní problém — '
-        'anglický Google Trends dotaz měří jazykový bias). Přechod na dvoudimenzionální model '
-        '50/50 (policy + adoption). Citlivostní analýza přepočtena pro 2D váhy.'
+        'v6 (březen 2026): Adopční dimenze přestavěna na dva verifikované zdroje — '
+        'TALIS 2024 (OECD, 20/27 zemí) a Eurostat 2025 GenAI (27/27 zemí). '
+        'Odstraněna proxy imputace z Government AI Readiness (ρ = 0,07). '
+        'Žádná země nemá odhadované hodnoty.'
     )
+    pdf.body_text(
+        'v5 (únor 2026): Vyloučen media_score z celkového skóre (anglophone bias). '
+        'Přechod na dvoudimenzionální model 50/50.'
+    )
+    pdf.body_text(
+        'v1–v4 (leden 2025): Tři dimenze (policy + adoption + media). '
+        'Adopce založena na heterogenních zdrojích s proxy imputací.'
+    )
+    pdf.body_text('Předpokládaná frekvence aktualizace: ročně.')
 
     # ============================================================
     # 12. Kontakt

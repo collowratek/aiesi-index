@@ -169,7 +169,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache_data(ttl=300)  # 5min cache, v5 two-dimensional
+@st.cache_data(ttl=300)  # 5min cache, v6 TALIS+Eurostat
 def load_data():
     return pd.read_csv("data/processed/aiesi_data.csv")
 
@@ -361,13 +361,13 @@ def main():
 
     with tab3:
         st.markdown("""
-        ### AIESI Index v5
+        ### AIESI Index v6
 
         Explorativní nástroj měřící, jak moc je AI ve vzdělávání „velkým tématem" v zemích EU27.
 
         **Dvě dimenze (rovné váhy):**
         - **Pokrytí politik (50 %)** — checklist existence strategií, kurikula, školení učitelů, pilotů
-        - **Adopce (50 %)** — normalizované % učitelů používajících AI, přístup studentů k AI
+        - **Adopce (50 %)** — dva nezávislé zdroje: TALIS 2024 (% učitelů s AI) + Eurostat 2025 (% populace s GenAI)
 
         **Interpretace skóre:**
         - 0,0–0,3: Nízká salience
@@ -377,12 +377,12 @@ def main():
 
         # Data quality note
         if 'adoption_method' in df.columns:
-            n_measured = (df['adoption_method'] == 'measured').sum()
-            n_partial = (df['adoption_method'] == 'partial').sum()
-            n_proxy = (df['adoption_method'] == 'proxy').sum()
+            n_both = (df['adoption_method'] == 'both').sum()
+            n_eurostat = (df['adoption_method'] == 'eurostat_only').sum()
             st.markdown(f"""
         **Kvalita adopčních dat:**
-        {n_measured} zemí s oběma indikátory, {n_partial} s jedním, {n_proxy} s proxy odhadem (gov. AI readiness)
+        {n_both} zemí s oběma zdroji (TALIS + Eurostat), {n_eurostat} pouze s Eurostat
+        (DE, IE, HR, SI, CY, EL, LU — neúčastnily se TALIS 2024).
             """)
 
         # Dimension correlation
@@ -400,25 +400,17 @@ def main():
         except FileNotFoundError:
             pass
 
-        # Excluded indicator
-        st.markdown("""
-        **Vyloučený indikátor — mediální zájem (media_score):**
-        Původně třetí dimenze založená na Google Trends (dotaz „AI in education").
-        Vyloučena z výpočtu overall_score z důvodu fundamentálního problému validity:
-        jediný anglický dotaz měří anglophone bias, nikoliv skutečný mediální zájem
-        (Irsko = 1,0; 10 zemí = 0,0). Data zůstávají v CSV jako informativní sloupec.
-        """)
-
         st.markdown("""
         **Hlavní omezení:**
         - Pokrytí politik měří existenci (checklist), nikoliv kvalitu či financování
-        - Adopce u 11 zemí odhadnuta proxy z gov. AI readiness (ρ = 0,07 s měřenými daty)
+        - 7 zemí má adopci pouze z Eurostat (bez TALIS učitelského průzkumu)
         - N=27, výsledky interpretujte s přiměřenou opatrností
 
         **Zdroje:**
-        OECD TALIS 2024, European Schoolnet 2024, Oxford Insights
+        OECD TALIS 2024 (učitelé, 20/27 zemí), Eurostat 2025 isoc_ai_iaiu (GenAI populace, 27/27),
+        European Schoolnet 2024
 
-        **Sběr dat:** leden 2025
+        **Sběr dat:** leden 2025, adopční data aktualizována březen 2026
         """)
 
         # PDF methodology download
@@ -433,7 +425,7 @@ def main():
     # Footer
     st.markdown("""
     <div class="site-footer">
-        <a href="https://skolagpt.cz">skolagpt.cz</a> · Data: leden 2025
+        <a href="https://skolagpt.cz">skolagpt.cz</a> · Data: 2025, v6
     </div>
     """, unsafe_allow_html=True)
 
