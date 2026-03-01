@@ -227,14 +227,13 @@ def create_map(df, geojson, dimension):
 
 def create_ranking(df):
     """Simple horizontal bar ranking"""
-    df_sorted = df.sort_values('overall_score_v3', ascending=True)
+    df_sorted = df.sort_values('overall_score', ascending=True)
 
     fig = go.Figure()
 
-    import numpy as np
     # Color bars by score: red (low) → yellow (mid) → green (high)
     colors = []
-    for score in df_sorted['overall_score_v3']:
+    for score in df_sorted['overall_score']:
         if score <= 0.33:
             colors.append('#c62828')
         elif score <= 0.5:
@@ -246,7 +245,7 @@ def create_ranking(df):
 
     fig.add_trace(go.Bar(
         y=df_sorted['country'],
-        x=df_sorted['overall_score_v3'],
+        x=df_sorted['overall_score'],
         orientation='h',
         marker_color=colors,
         marker_line_width=0,
@@ -308,10 +307,10 @@ def main():
         with col2:
             dimension = st.selectbox(
                 "Zobrazit",
-                options=["overall_score_v3", "edu_policy_score", "adoption_score", "media_score"],
+                options=["overall_score", "edu_policy_coverage", "adoption_score", "media_score"],
                 format_func=lambda x: {
-                    "overall_score_v3": "Celkové skóre",
-                    "edu_policy_score": "Politiky",
+                    "overall_score": "Celkové skóre",
+                    "edu_policy_coverage": "Pokrytí politik",
                     "adoption_score": "Adopce",
                     "media_score": "Média"
                 }[x],
@@ -325,23 +324,25 @@ def main():
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
         # Key stats below map - minimal
-        top = df.loc[df['overall_score_v3'].idxmax()]
+        top = df.loc[df['overall_score'].idxmax()]
         cz = df[df['country_code'] == 'CZ'].iloc[0]
-        cz_rank = (df['overall_score_v3'] > cz['overall_score_v3']).sum() + 1
+        cz_rank = (df['overall_score'] > cz['overall_score']).sum() + 1
 
+        eu_mean = df['overall_score'].mean()
+        eu_sd = df['overall_score'].std()
         st.markdown(f"""
         <div class="stat-row">
             <div class="stat-item">
                 <div class="stat-value">{top['country']}</div>
-                <div class="stat-label">nejvyšší skóre</div>
+                <div class="stat-label">nejvyšší skóre ({top['overall_score']:.1f})</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{cz_rank}.</div>
                 <div class="stat-label">Česko</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value">{df['overall_score_v3'].mean():.2f}</div>
-                <div class="stat-label">průměr EU</div>
+                <div class="stat-value">{eu_mean:.1f} ± {eu_sd:.1f}</div>
+                <div class="stat-label">průměr EU (± SD)</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -361,23 +362,55 @@ def main():
 
     with tab3:
         st.markdown("""
-        ### AIESI Index
+        ### AIESI Index v4
 
         Explorativní nástroj měřící, jak moc je AI ve vzdělávání „velkým tématem" v zemích EU27.
 
-        **Tři dimenze (každá 33 %):**
-        - **Politiky** — strategie, kurikulum, školení učitelů (checklist existence)
-        - **Adopce** — % učitelů používajících AI nástroje
-        - **Média** — veřejný zájem (Google Trends)
+        **Tři dimenze (nerovnoměrné váhy):**
+        - **Pokrytí politik (40 %)** — checklist existence strategií, kurikula, školení učitelů, pilotů
+        - **Adopce (40 %)** — normalizované % učitelů používajících AI, přístup studentů k AI
+        - **Mediální zájem (20 %)** — Google Trends (snížená váha kvůli jazykovému biasu)
 
         **Interpretace skóre:**
-        - 0,00–0,33: Nízká salience
-        - 0,34–0,66: Střední salience
-        - 0,67–1,00: Vysoká salience
+        - 0,0–0,3: Nízká salience
+        - 0,3–0,7: Střední salience
+        - 0,7–1,0: Vysoká salience
+        """)
 
+        # Data quality note
+        if 'adoption_method' in df.columns:
+            n_measured = (df['adoption_method'] == 'measured').sum()
+            n_partial = (df['adoption_method'] == 'partial').sum()
+            n_proxy = (df['adoption_method'] == 'proxy').sum()
+            st.markdown(f"""
+        **Kvalita adopčních dat:**
+        {n_measured} zemí s oběma indikátory, {n_partial} s jedním, {n_proxy} s proxy odhadem (gov. AI readiness)
+            """)
+
+        # Correlation matrix
+        st.markdown("**Korelace dimenzí (Spearman):**")
+        corr = df[['edu_policy_coverage', 'adoption_score', 'media_score']].corr(method='spearman')
+        corr.index = ['Pokrytí politik', 'Adopce', 'Média']
+        corr.columns = ['Pokrytí politik', 'Adopce', 'Média']
+        st.dataframe(corr.round(2), use_container_width=False)
+
+        # Sensitivity analysis summary
+        try:
+            sa = pd.read_csv("data/processed/sensitivity_analysis.csv")
+            st.markdown(f"""
+        **Citlivostní analýza ({len(sa)} kombinací vah ±15 %):**
+        Spearman rho pořadí: min {sa['spearman_rho'].min():.3f}, průměr {sa['spearman_rho'].mean():.3f}
+        — pořadí zemí je stabilní při změnách vah.
+            """)
+        except FileNotFoundError:
+            pass
+
+        st.markdown("""
         **Hlavní omezení:**
-        - Media score je metodicky nejslabší (jazykový bias Google Trends)
-        - Edu policy měří existenci, ne kvalitu či financování
+        - Pokrytí politik měří existenci (checklist), nikoliv kvalitu či financování
+        - Mediální zájem zachycuje pouze anglické dotazy — jazykový bias
+        - Adopce u 11 zemí odhadnuta proxy z gov. AI readiness (nízká korelace s měřenými daty)
+        - N=27, výsledky interpretujte s přiměřenou opatrností
 
         **Zdroje:**
         OECD TALIS 2024, European Schoolnet 2024, Google Trends, Oxford Insights
