@@ -169,7 +169,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache_data
+@st.cache_data(ttl=300)  # 5min cache, v4 data schema
 def load_data():
     return pd.read_csv("data/processed/aiesi_data.csv")
 
