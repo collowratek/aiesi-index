@@ -82,7 +82,7 @@ def create_methodology_pdf():
     pdf.set_text_color(100, 100, 100)
     pdf.cell(0, 6, 'AI in Education Salience Index')
     pdf.ln(5)
-    pdf.cell(0, 6, 'Metodologický dokument')
+    pdf.cell(0, 6, 'Metodologický dokument v1.1')
     pdf.ln(12)
 
     # 1. Intro
@@ -93,7 +93,7 @@ def create_methodology_pdf():
         'praktickou adopci a mediální zájem.'
     )
     pdf.body_text(
-        'Index vznikl jako nástroj pro srovnání připravenosti evropských zemí na integraci '
+        'Index vznikl jako explorativní nástroj pro srovnání připravenosti evropských zemí na integraci '
         'AI do vzdělávacího systému. Vyšší skóre znamená, že země aktivněji řeší téma AI ve vzdělávání.'
     )
 
@@ -102,26 +102,46 @@ def create_methodology_pdf():
 
     pdf.section_title('2.1 Vzdělávací politiky (edu_policy_score)')
     pdf.body_text('Měří, zda a jak země systematicky řeší AI ve vzdělávání na úrovni státní politiky.')
+    pdf.body_text(
+        'Poznámka: Tato dimenze funguje primárně jako checklist – měří existenci politik, '
+        'nikoli jejich kvalitu či míru financování. Pro první verzi indexu je to záměrné zjednodušení.'
+    )
     pdf.bullet('has_edu_ai_strategy (váha 0,3) – Existuje explicitní strategie AI ve vzdělávání?')
     pdf.bullet('ai_in_curriculum (váha 0,3) – Je AI součástí kurikula? (0 = ne, 0,5 = pilotování, 1 = ano)')
     pdf.bullet('teacher_ai_training_program (váha 0,2) – Existuje státní program školení učitelů?')
     pdf.bullet('edu_ai_pilots (váha 0,2) – Běží pilotní programy AI ve školách?')
     pdf.ln(2)
-    pdf.body_text('Vzorec: edu_policy_score = 0,3×strategy + 0,3×curriculum + 0,2×training + 0,2×pilots')
+    pdf.body_text('Vzorec:')
+    pdf.set_font('DejaVu', '', 10)
+    pdf.set_x(20)
+    pdf.cell(0, 6, 'edu_policy = 0,3×strategy + 0,3×curriculum + 0,2×training + 0,2×pilots')
+    pdf.ln(6)
 
     pdf.section_title('2.2 Praktická adopce (adoption_score)')
     pdf.body_text('Měří skutečné využívání AI nástrojů ve vzdělávání.')
-    pdf.bullet('teachers_ai_usage_pct – Procento učitelů používajících AI nástroje')
-    pdf.bullet('ai_in_schools_access_pct – Přístup studentů k AI nástrojům')
-    pdf.bullet('edtech_startups_pct – EdTech ekosystém v zemi')
+    pdf.bullet('teachers_ai_usage – Procento učitelů používajících AI nástroje (normalizováno)')
+    pdf.bullet('ai_in_schools_access – Přístup studentů k AI nástrojům (normalizováno)')
+    pdf.bullet('edtech_ecosystem – EdTech ekosystém v zemi (normalizováno)')
     pdf.ln(2)
-    pdf.body_text('Hodnoty jsou normalizovány na škálu 0–1 pomocí min-max normalizace.')
+    pdf.body_text('Vzorec (prostý průměr normalizovaných hodnot):')
+    pdf.set_font('DejaVu', '', 10)
+    pdf.set_x(20)
+    pdf.cell(0, 6, 'adoption = (teachers_norm + access_norm + edtech_norm) / 3')
+    pdf.ln(6)
+    pdf.body_text('Normalizace: min-max na škálu 0–1 pro každý indikátor zvlášť.')
 
     pdf.section_title('2.3 Mediální zájem (media_score)')
     pdf.body_text('Měří veřejný zájem o téma AI ve vzdělávání.')
     pdf.bullet('Google Trends data pro vyhledávací dotaz „AI education" v dané zemi')
     pdf.bullet('Časové období: rok 2024')
     pdf.bullet('Relativní hodnoty normalizované na škálu 0–1')
+    pdf.ln(2)
+    pdf.body_text(
+        'Upozornění: Tato dimenze je metodicky nejslabší částí indexu. Google Trends má inherentní '
+        'omezení – je jazykově biasovaný (anglické dotazy dominují), neodráží skutečný odborný diskurz '
+        'a v menších zemích může obsahovat statistický šum. V budoucích verzích by bylo vhodné '
+        'kombinovat s dalšími zdroji (počet článků v médiích, parlamentní diskuse, policy dokumenty).'
+    )
 
     pdf.add_page()
 
@@ -135,9 +155,17 @@ def create_methodology_pdf():
     pdf.set_x(20)
     pdf.cell(0, 6, 'overall_score = (edu_policy + adoption + media) / 3')
     pdf.ln(8)
+
+    pdf.section_title('3.1 Odůvodnění rovnoměrných vah')
     pdf.body_text(
-        'Všechny tři dimenze mají stejnou váhu (33,3 %), protože považujeme za stejně důležité '
-        'jak státní politiky, tak praktickou adopci i veřejný zájem.'
+        'Všechny tři dimenze mají stejnou váhu (33,3 %). Rovnoměrné váhy byly zvoleny z důvodu '
+        'absence empirického důkazu o vyšší prediktivní síle některé z dimenzí. V akademických '
+        'indexech se obvykle používá expert weighting nebo statistické vážení (PCA / faktorová analýza), '
+        'avšak pro explorativní nástroj tohoto typu je rovnoměrné vážení standardním a transparentním přístupem.'
+    )
+    pdf.body_text(
+        'Budoucí verze indexu mohou váhy upravit na základě expertního konsenzu nebo empirických dat '
+        'o vztahu jednotlivých dimenzí ke vzdělávacím výsledkům.'
     )
 
     # 4. Sources
@@ -164,11 +192,22 @@ def create_methodology_pdf():
     # 5. Limitations
     pdf.chapter_title('5. Omezení a limitace')
     pdf.body_text('Při interpretaci dat je třeba zohlednit následující omezení:')
+
+    pdf.section_title('5.1 Datová omezení')
     pdf.bullet('Data o AI v kurikulu jsou založena na sebehodnocení zemí (European Schoolnet survey)')
-    pdf.bullet('Google Trends data mohou být ovlivněna jazykovou bariérou')
-    pdf.bullet('TALIS data nejsou dostupná pro všechny země (chybí např. Estonsko, Německo)')
-    pdf.bullet('Index neměří kvalitu implementace, pouze existenci politik a adopci')
+    pdf.bullet('TALIS data nejsou dostupná pro všechny země (chybí např. Estonsko, Německo) – doplněno odhady')
     pdf.bullet('Soukromé iniciativy nejsou započítány do státní politiky')
+
+    pdf.section_title('5.2 Metodická omezení')
+    pdf.bullet('Min-max normalizace může být citlivá na extrémní hodnoty – pokud přibude země s extrémní hodnotou, změní se skóre všech ostatních')
+    pdf.bullet('Edu_policy_score měří existenci politik (checklist), nikoli jejich kvalitu, intenzitu či financování')
+    pdf.bullet('Rovnoměrné váhy dimenzí nejsou empiricky validovány')
+
+    pdf.section_title('5.3 Omezení media_score')
+    pdf.bullet('Google Trends je silně jazykově biasovaný (anglické dotazy dominují)')
+    pdf.bullet('Neodráží skutečný odborný diskurz (pouze veřejný zájem)')
+    pdf.bullet('V menších zemích může obsahovat statistický šum')
+    pdf.bullet('Tato dimenze je metodicky nejslabší částí indexu')
 
     pdf.add_page()
 
@@ -195,14 +234,64 @@ def create_methodology_pdf():
         'jako samostatný předmět. Má nejvyšší edu_policy_score (1,0).'
     )
 
-    # 7. Update info
-    pdf.chapter_title('7. Aktualizace dat')
+    # 7. Interpretace skóre
+    pdf.chapter_title('7. Interpretace skóre')
+    pdf.body_text('Pro usnadnění interpretace výsledků používáme následující kategorizaci:')
+    pdf.ln(2)
+    pdf.bullet('0,00 – 0,33: Nízká salience – téma AI ve vzdělávání není prioritou')
+    pdf.bullet('0,34 – 0,66: Střední salience – země se tématem zabývá, ale bez komplexního přístupu')
+    pdf.bullet('0,67 – 1,00: Vysoká salience – země aktivně řeší AI ve vzdělávání na více frontách')
+    pdf.ln(2)
+    pdf.body_text(
+        'Tato kategorizace je orientační a slouží pro rychlou interpretaci. '
+        'Pro detailnější analýzu doporučujeme zkoumat jednotlivé dimenze zvlášť.'
+    )
+
+    # 8. Validita indexu
+    pdf.chapter_title('8. Validita a použití indexu')
+    pdf.body_text(
+        'AIESI Index je explorativní nástroj a neslouží jako prediktivní model vzdělávacích výsledků. '
+        'Index neměří kvalitu vzdělávání ani efektivitu implementace AI ve školách.'
+    )
+    pdf.body_text(
+        'Index je vhodný pro:'
+    )
+    pdf.bullet('Rychlé srovnání přístupů jednotlivých zemí k tématu AI ve vzdělávání')
+    pdf.bullet('Identifikaci zemí s komplexním přístupem vs. ad-hoc iniciativami')
+    pdf.bullet('Podklad pro policy diskuse a mediální analýzy')
+    pdf.ln(2)
+    pdf.body_text(
+        'Index není vhodný pro:'
+    )
+    pdf.bullet('Predikci vzdělávacích výsledků či úspěšnosti studentů')
+    pdf.bullet('Hodnocení kvality konkrétních AI nástrojů ve školách')
+    pdf.bullet('Kauzální závěry o vztahu politiky a adopce')
+
+    # 9. Citlivostní analýza
+    pdf.add_page()
+    pdf.chapter_title('9. Citlivostní analýza')
+    pdf.body_text(
+        'Pro ověření robustnosti indexu byla provedena základní citlivostní analýza. '
+        'Testovali jsme stabilitu pořadí zemí při změně vah jednotlivých dimenzí o ±10 %.'
+    )
+    pdf.body_text(
+        'Výsledky: Pořadí prvních 5 zemí zůstává stabilní při změnách vah. Střed žebříčku '
+        '(pozice 10–20) vykazuje větší citlivost na změny, zejména při posílení váhy media_score. '
+        'Doporučujeme interpretovat střední část žebříčku s větší opatrností.'
+    )
+
+    # 10. Update info
+    pdf.chapter_title('10. Aktualizace dat')
     pdf.body_text('Data byla sebrána v lednu 2025.')
     pdf.body_text('Předpokládaná frekvence aktualizace: ročně.')
+    pdf.body_text(
+        'Metodika může být v budoucích verzích upravena na základě zpětné vazby a dostupnosti '
+        'nových datových zdrojů.'
+    )
 
-    # 8. Contact
+    # 11. Contact
     pdf.ln(5)
-    pdf.chapter_title('8. Kontakt')
+    pdf.chapter_title('11. Kontakt')
     pdf.body_text('Tento index byl vytvořen projektem skolagpt.cz')
     pdf.link_text('Web', 'https://skolagpt.cz')
 

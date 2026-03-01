@@ -342,15 +342,24 @@ def main():
         st.markdown("""
         ### AIESI Index
 
-        Index měří připravenost zemí EU27 na AI ve vzdělávání.
+        Explorativní nástroj měřící, jak moc je AI ve vzdělávání „velkým tématem" v zemích EU27.
 
-        **Tři dimenze:**
-        - **Politiky** — strategie, kurikulum, školení učitelů
+        **Tři dimenze (každá 33 %):**
+        - **Politiky** — strategie, kurikulum, školení učitelů (checklist existence)
         - **Adopce** — % učitelů používajících AI nástroje
         - **Média** — veřejný zájem (Google Trends)
 
+        **Interpretace skóre:**
+        - 0,00–0,33: Nízká salience
+        - 0,34–0,66: Střední salience
+        - 0,67–1,00: Vysoká salience
+
+        **Hlavní omezení:**
+        - Media score je metodicky nejslabší (jazykový bias Google Trends)
+        - Edu policy měří existenci, ne kvalitu či financování
+
         **Zdroje:**
-        OECD TALIS 2024, European Schoolnet, Google Trends
+        OECD TALIS 2024, European Schoolnet 2024, Google Trends, Oxford Insights
 
         **Sběr dat:** leden 2025
         """)
