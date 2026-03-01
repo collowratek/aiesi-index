@@ -186,7 +186,15 @@ def create_map(df, geojson, dimension):
         locations="country_code",
         featureidkey="properties.ISO_A2",
         color=dimension,
-        color_continuous_scale=["#fee", "#c7254e"],  # Light red to dark red
+        color_continuous_scale=[
+            [0, "#c62828"],      # Deep red - low score
+            [0.25, "#ef5350"],   # Red
+            [0.4, "#ffb74d"],    # Amber
+            [0.5, "#fff176"],    # Yellow - middle
+            [0.65, "#aed581"],   # Light green
+            [0.8, "#66bb6a"],    # Green
+            [1, "#2e7d32"]       # Deep green - high score
+        ],
         range_color=[0, 1],
         mapbox_style="carto-positron",
         zoom=3.2,
@@ -205,8 +213,8 @@ def create_map(df, geojson, dimension):
         paper_bgcolor='#f5f5f5',  # Light gray background
         coloraxis_colorbar=dict(
             title="",
-            tickvals=[0, 0.5, 1],
-            ticktext=["0", "0.5", "1"],
+            tickvals=[0, 0.33, 0.66, 1],
+            ticktext=["0", "0.33", "0.66", "1"],
             len=0.4,
             thickness=8,
             outlinewidth=0,
@@ -223,11 +231,24 @@ def create_ranking(df):
 
     fig = go.Figure()
 
+    import numpy as np
+    # Color bars by score: red (low) → yellow (mid) → green (high)
+    colors = []
+    for score in df_sorted['overall_score_v3']:
+        if score <= 0.33:
+            colors.append('#c62828')
+        elif score <= 0.5:
+            colors.append('#ef5350')
+        elif score <= 0.66:
+            colors.append('#ffb74d')
+        else:
+            colors.append('#2e7d32')
+
     fig.add_trace(go.Bar(
         y=df_sorted['country'],
         x=df_sorted['overall_score_v3'],
         orientation='h',
-        marker_color='#c7254e',
+        marker_color=colors,
         marker_line_width=0,
         hovertemplate='%{y}: %{x:.2f}<extra></extra>'
     ))
