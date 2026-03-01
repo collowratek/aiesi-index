@@ -169,7 +169,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache_data(ttl=300)  # 5min cache, v4 data schema
+@st.cache_data(ttl=300)  # 5min cache, v5 two-dimensional
 def load_data():
     return pd.read_csv("data/processed/aiesi_data.csv")
 
@@ -307,12 +307,11 @@ def main():
         with col2:
             dimension = st.selectbox(
                 "Zobrazit",
-                options=["overall_score", "edu_policy_coverage", "adoption_score", "media_score"],
+                options=["overall_score", "edu_policy_coverage", "adoption_score"],
                 format_func=lambda x: {
                     "overall_score": "Celkové skóre",
                     "edu_policy_coverage": "Pokrytí politik",
                     "adoption_score": "Adopce",
-                    "media_score": "Média"
                 }[x],
                 label_visibility="collapsed"
             )
@@ -362,14 +361,13 @@ def main():
 
     with tab3:
         st.markdown("""
-        ### AIESI Index v4
+        ### AIESI Index v5
 
         Explorativní nástroj měřící, jak moc je AI ve vzdělávání „velkým tématem" v zemích EU27.
 
-        **Tři dimenze (nerovnoměrné váhy):**
-        - **Pokrytí politik (40 %)** — checklist existence strategií, kurikula, školení učitelů, pilotů
-        - **Adopce (40 %)** — normalizované % učitelů používajících AI, přístup studentů k AI
-        - **Mediální zájem (20 %)** — Google Trends (snížená váha kvůli jazykovému biasu)
+        **Dvě dimenze (rovné váhy):**
+        - **Pokrytí politik (50 %)** — checklist existence strategií, kurikula, školení učitelů, pilotů
+        - **Adopce (50 %)** — normalizované % učitelů používajících AI, přístup studentů k AI
 
         **Interpretace skóre:**
         - 0,0–0,3: Nízká salience
@@ -387,33 +385,38 @@ def main():
         {n_measured} zemí s oběma indikátory, {n_partial} s jedním, {n_proxy} s proxy odhadem (gov. AI readiness)
             """)
 
-        # Correlation matrix
-        st.markdown("**Korelace dimenzí (Spearman):**")
-        corr = df[['edu_policy_coverage', 'adoption_score', 'media_score']].corr(method='spearman')
-        corr.index = ['Pokrytí politik', 'Adopce', 'Média']
-        corr.columns = ['Pokrytí politik', 'Adopce', 'Média']
-        st.dataframe(corr.round(2), use_container_width=False)
+        # Dimension correlation
+        rho = df['edu_policy_coverage'].rank().corr(df['adoption_score'].rank())
+        st.markdown(f"**Korelace dimenzí (Spearman):** ρ = {rho:.2f} — dimenze jsou téměř nezávislé.")
 
         # Sensitivity analysis summary
         try:
             sa = pd.read_csv("data/processed/sensitivity_analysis.csv")
             st.markdown(f"""
-        **Citlivostní analýza ({len(sa)} kombinací vah ±15 %):**
+        **Citlivostní analýza ({len(sa)} kombinací vah, rozsah 20–80 %):**
         Spearman rho pořadí: min {sa['spearman_rho'].min():.3f}, průměr {sa['spearman_rho'].mean():.3f}
         — pořadí zemí je stabilní při změnách vah.
             """)
         except FileNotFoundError:
             pass
 
+        # Excluded indicator
+        st.markdown("""
+        **Vyloučený indikátor — mediální zájem (media_score):**
+        Původně třetí dimenze založená na Google Trends (dotaz „AI in education").
+        Vyloučena z výpočtu overall_score z důvodu fundamentálního problému validity:
+        jediný anglický dotaz měří anglophone bias, nikoliv skutečný mediální zájem
+        (Irsko = 1,0; 10 zemí = 0,0). Data zůstávají v CSV jako informativní sloupec.
+        """)
+
         st.markdown("""
         **Hlavní omezení:**
         - Pokrytí politik měří existenci (checklist), nikoliv kvalitu či financování
-        - Mediální zájem zachycuje pouze anglické dotazy — jazykový bias
-        - Adopce u 11 zemí odhadnuta proxy z gov. AI readiness (nízká korelace s měřenými daty)
+        - Adopce u 11 zemí odhadnuta proxy z gov. AI readiness (ρ = 0,07 s měřenými daty)
         - N=27, výsledky interpretujte s přiměřenou opatrností
 
         **Zdroje:**
-        OECD TALIS 2024, European Schoolnet 2024, Google Trends, Oxford Insights
+        OECD TALIS 2024, European Schoolnet 2024, Oxford Insights
 
         **Sběr dat:** leden 2025
         """)

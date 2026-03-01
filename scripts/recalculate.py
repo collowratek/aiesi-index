@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-AIESI Index v4 — Data Recalculation
+AIESI Index v5 — Data Recalculation
 
-Addresses academic review:
-1. Adoption_score: transparent calculation, documented imputation
-2. Media_score: reduced weight (33% → 20%)
-3. Edu_policy: renamed to edu_policy_coverage (checklist, not quality)
-4. Legacy columns removed
-5. Sensitivity analysis: actual Spearman rank correlations
-6. Descriptive statistics with SD
+Two-dimensional index:
+1. edu_policy_coverage (50%) — checklist of AI-in-education policies
+2. adoption_score (50%) — teacher AI usage + school AI access
+
+media_score retained in CSV as informational column but excluded from
+overall_score due to fundamental validity issue (single English-language
+Google Trends query → measures anglophone bias, not actual media salience).
 """
 
 import pandas as pd
@@ -105,49 +105,39 @@ def main():
         print(f"    {r['country']:15s} → {r['adoption_score']:.2f}  [{r['adoption_method']:8s}]  ({t}, {a})")
 
     # ================================================================
-    # 2. RENAME edu_policy_score → edu_policy_coverage
+    # 2. OVERALL SCORE — two dimensions, 50/50
     # ================================================================
-    df['edu_policy_coverage'] = df['edu_policy_score']
-
-    # ================================================================
-    # 3. REWEIGHT: 40% policy, 40% adoption, 20% media
-    # ================================================================
-    W_POLICY = 0.4
-    W_ADOPTION = 0.4
-    W_MEDIA = 0.2
+    # media_score excluded: single English Google Trends query measures
+    # anglophone bias, not actual media salience (Ireland = 1.0, 10 countries = 0.0)
+    W_POLICY = 0.5
+    W_ADOPTION = 0.5
 
     df['overall_score'] = (
         W_POLICY * df['edu_policy_coverage'] +
-        W_ADOPTION * df['adoption_score'] +
-        W_MEDIA * df['media_score']
+        W_ADOPTION * df['adoption_score']
     ).round(2)
 
-    print(f"\n=== REWEIGHTED SCORES (P:{W_POLICY} A:{W_ADOPTION} M:{W_MEDIA}) ===")
+    print(f"\n=== SCORES (P:{W_POLICY} A:{W_ADOPTION}, media excluded) ===")
     for _, r in df.sort_values('overall_score', ascending=False).iterrows():
         print(f"  {r['country']:15s}  overall={r['overall_score']:.2f}  "
-              f"(P:{r['edu_policy_coverage']:.1f} A:{r['adoption_score']:.2f} M:{r['media_score']:.2f})")
+              f"(P:{r['edu_policy_coverage']:.1f} A:{r['adoption_score']:.2f})")
 
     # ================================================================
-    # 4. SENSITIVITY ANALYSIS — actual computation
+    # 3. SENSITIVITY ANALYSIS — 2D weight sweep
     # ================================================================
     base_rank = df['overall_score'].rank(ascending=False)
 
     sa_results = []
-    for dp in np.arange(-0.15, 0.16, 0.05):
-        for da in np.arange(-0.15, 0.16, 0.05):
-            dm = -(dp + da)
-            w = [round(W_POLICY + dp, 2), round(W_ADOPTION + da, 2), round(W_MEDIA + dm, 2)]
-            if min(w) < 0.05 or max(w) > 0.70:
-                continue
-            scores = (w[0] * df['edu_policy_coverage'] +
-                      w[1] * df['adoption_score'] +
-                      w[2] * df['media_score'])
-            new_rank = scores.rank(ascending=False)
-            rho = spearman(base_rank, new_rank)
-            sa_results.append({
-                'w_policy': w[0], 'w_adoption': w[1], 'w_media': w[2],
-                'spearman_rho': round(rho, 3)
-            })
+    for wp in np.arange(0.20, 0.81, 0.05):
+        wa = round(1.0 - wp, 2)
+        wp = round(wp, 2)
+        scores = wp * df['edu_policy_coverage'] + wa * df['adoption_score']
+        new_rank = scores.rank(ascending=False)
+        rho = spearman(base_rank, new_rank)
+        sa_results.append({
+            'w_policy': wp, 'w_adoption': wa,
+            'spearman_rho': round(rho, 3)
+        })
 
     sa_df = pd.DataFrame(sa_results)
     print(f"\n=== SENSITIVITY ANALYSIS ({len(sa_df)} weight combinations) ===")
@@ -161,38 +151,34 @@ def main():
     top5_base = set(df.nlargest(5, 'overall_score')['country'])
     stable_count = 0
     for _, sr in sa_df.iterrows():
-        scores = (sr['w_policy'] * df['edu_policy_coverage'] +
-                  sr['w_adoption'] * df['adoption_score'] +
-                  sr['w_media'] * df['media_score'])
+        scores = sr['w_policy'] * df['edu_policy_coverage'] + sr['w_adoption'] * df['adoption_score']
         top5_new = set(df.loc[scores.nlargest(5).index, 'country'])
         if top5_base == top5_new:
             stable_count += 1
     print(f"  Top-5 identical across combinations: {stable_count}/{len(sa_df)}")
 
     # ================================================================
-    # 5. CORRELATION MATRIX (Spearman)
+    # 4. CORRELATION (Spearman) — two dimensions
     # ================================================================
-    dims = df[['edu_policy_coverage', 'adoption_score', 'media_score']]
-    corr = dims.corr(method='spearman')
-    print(f"\n=== SPEARMAN CORRELATION MATRIX ===")
-    print(corr.round(3).to_string())
+    rho_dims = spearman(df['edu_policy_coverage'], df['adoption_score'])
+    print(f"\n=== DIMENSION CORRELATION ===")
+    print(f"  Spearman rho(policy, adoption) = {rho_dims:.3f}")
 
     # ================================================================
-    # 6. DESCRIPTIVE STATISTICS
+    # 5. DESCRIPTIVE STATISTICS
     # ================================================================
     print(f"\n=== DESCRIPTIVE STATISTICS ===")
     for col, label in [
         ('overall_score', 'Overall'),
         ('edu_policy_coverage', 'Policy coverage'),
         ('adoption_score', 'Adoption'),
-        ('media_score', 'Media')
     ]:
         s = df[col]
         print(f"  {label:18s}: M={s.mean():.2f}, SD={s.std():.2f}, "
               f"min={s.min():.2f}, max={s.max():.2f}, median={s.median():.2f}")
 
     # ================================================================
-    # 7. CLEAN OUTPUT — remove legacy columns
+    # 6. CLEAN OUTPUT — media_score kept as informational column
     # ================================================================
     out_cols = [
         'country', 'country_code',

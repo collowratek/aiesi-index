@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate AIESI Methodology PDF v4 — academically rigorous version"""
+"""Generate AIESI Methodology PDF v5 — two-dimensional index"""
 
 from fpdf import FPDF
 import os
@@ -14,7 +14,7 @@ class MethodologyPDF(FPDF):
     def header(self):
         self.set_font('DejaVu', '', 9)
         self.set_text_color(150, 150, 150)
-        self.cell(0, 10, 'AIESI Index v4 – Metodologie', align='R')
+        self.cell(0, 10, 'AIESI Index v5 – Metodologie', align='R')
         self.ln(12)
 
     def footer(self):
@@ -84,7 +84,7 @@ def create_methodology_pdf():
     pdf.set_text_color(100, 100, 100)
     pdf.cell(0, 6, 'AI in Education Salience Index')
     pdf.ln(5)
-    pdf.cell(0, 6, 'Metodologický dokument v4')
+    pdf.cell(0, 6, 'Metodologický dokument v5')
     pdf.ln(12)
 
     # ============================================================
@@ -93,8 +93,8 @@ def create_methodology_pdf():
     pdf.chapter_title('1. Co je AIESI Index')
     pdf.body_text(
         'AIESI Index měří, jak moc je umělá inteligence ve vzdělávání „velkým tématem" '
-        'v jednotlivých zemích EU27. Index kombinuje tři dimenze: pokrytí vzdělávacích politik, '
-        'praktickou adopci a mediální zájem.'
+        'v jednotlivých zemích EU27. Index kombinuje dvě dimenze: pokrytí vzdělávacích politik '
+        'a praktickou adopci AI nástrojů.'
     )
     pdf.body_text(
         'Index je explorativní nástroj pro srovnání přístupů evropských zemí k integraci '
@@ -161,26 +161,26 @@ def create_methodology_pdf():
         '„adoption_method".'
     )
 
-    # 2.3 Media
-    pdf.section_title('2.3 Mediální zájem (media_score)')
-    pdf.body_text('Měří veřejný zájem o téma AI ve vzdělávání prostřednictvím Google Trends.')
-    pdf.bullet('Vyhledávací dotaz: „AI education" (anglicky)')
-    pdf.bullet('Časové období: rok 2024')
-    pdf.bullet('Normalizace: min-max na škálu 0–1')
-    pdf.ln(2)
+    # 2.3 Excluded indicator
+    pdf.section_title('2.3 Vyloučený indikátor: mediální zájem (media_score)')
     pdf.body_text(
-        'UPOZORNĚNÍ — tato dimenze je metodicky nejslabší částí indexu:'
+        'V předchozích verzích (v1–v4) index zahrnoval třetí dimenzi — mediální zájem '
+        'měřený prostřednictvím Google Trends (dotaz „AI education", rok 2024). '
+        'Ve verzi v5 byla tato dimenze vyloučena z výpočtu celkového skóre '
+        'z důvodu fundamentálního problému validity.'
     )
-    pdf.bullet('Jazykový bias: Použit pouze anglický dotaz. Irsko (media_score = 1,0) dominuje, '
-               '8 zemí má skóre 0,0.')
-    pdf.bullet('Neodráží odborný diskurz (pouze veřejný zájem)')
-    pdf.bullet('V menších zemích statistický šum')
+    pdf.ln(2)
+    pdf.body_text('Důvody vyloučení:')
+    pdf.bullet('Jediný anglický dotaz měří anglophone bias, nikoliv skutečný mediální zájem '
+               '— Irsko (nativně anglicky mluvící) = 1,0; 10 zemí = 0,0.')
+    pdf.bullet('Žádná diskriminační síla pro třetinu vzorku (10/27 zemí se skóre 0,0).')
+    pdf.bullet('Neodráží odborný diskurz ani veřejnou debatu v národních jazycích.')
+    pdf.bullet('Zahrnutí indikátoru s nízkou validitou oslabuje celkový index.')
     pdf.ln(2)
     pdf.body_text(
-        'Z důvodu těchto omezení byla váha media_score snížena z původních 33 % na 20 %. '
-        'V budoucích verzích doporučujeme doplnit lokální jazykové dotazy '
-        '(„KI Bildung", „IA éducation", „AI vzdělávání" apod.) a alternativní zdroje '
-        '(počet odborných článků, parlamentní diskuse).'
+        'Data media_score zůstávají v CSV souboru jako informativní sloupec. '
+        'Pro budoucí verze doporučujeme alternativní operacionalizaci: '
+        'lokální jazykové dotazy, počet odborných článků, parlamentní diskuse.'
     )
 
     pdf.add_page()
@@ -189,26 +189,27 @@ def create_methodology_pdf():
     # 3. Celkové skóre
     # ============================================================
     pdf.chapter_title('3. Výpočet celkového skóre')
-    pdf.body_text('Celkové skóre je vážený průměr tří dimenzí:')
+    pdf.body_text('Celkové skóre je prostý průměr dvou dimenzí:')
     pdf.ln(2)
-    pdf.formula('overall = 0,4 × policy_coverage + 0,4 × adoption + 0,2 × media')
+    pdf.formula('overall = 0,5 × policy_coverage + 0,5 × adoption')
     pdf.ln(2)
 
     pdf.section_title('3.1 Odůvodnění vah')
     pdf.body_text(
-        'Váhy 40/40/20 byly zvoleny na základě následujících úvah:'
+        'Rovné váhy 50/50 byly zvoleny na základě následujících úvah:'
     )
-    pdf.bullet('Policy coverage a adoption jsou primární dimenze — přímo měří aktivitu '
-               'a praxi států v oblasti AI ve vzdělávání.')
-    pdf.bullet('Media score má redukovanou váhu (20 %) z důvodu jazykového biasu '
-               'Google Trends a omezené validity jako indikátoru skutečné salience.')
-    pdf.bullet('V akademických indexech se běžně používá expert weighting nebo statistické '
-               'vážení (PCA / faktorová analýza). Pro explorativní nástroj s N=27 a heterogenní '
-               'kvalitou dat je expertní vážení transparentnějším přístupem než statistické metody.')
+    pdf.bullet('Obě dimenze přímo měří aktivitu států v oblasti AI ve vzdělávání — '
+               'policy_coverage zachycuje systémový rámec, adoption praktickou implementaci.')
+    pdf.bullet('Nízká vzájemná korelace dimenzí (Spearman ρ = 0,08) potvrzuje, že zachycují '
+               'odlišné aspekty — existence politik negarantuje adopci a naopak.')
+    pdf.bullet('Bez silného teoretického důvodu pro asymetrii jsou rovné váhy '
+               'nejtransparentnějším a nejobhajitelnějším přístupem.')
+    pdf.bullet('Pro explorativní nástroj s N=27 a heterogenní kvalitou dat je expertní '
+               'vážení transparentnějším přístupem než statistické metody (PCA).')
     pdf.ln(2)
     pdf.body_text(
         'Citlivostní analýza (viz kapitola 8) potvrzuje, že pořadí zemí je stabilní '
-        'při perturbaci vah o ±15 % (Spearmanovo ρ ≥ 0,93 ve všech testovaných kombinacích).'
+        'při změnách poměru vah v rozsahu 20/80 až 80/20 (Spearmanovo ρ ≥ 0,85).'
     )
 
     # ============================================================
@@ -225,7 +226,7 @@ def create_methodology_pdf():
     pdf.link_text('   ', 'https://oxfordinsights.com/ai-readiness/ai-readiness-index/')
     pdf.bullet('GoStudent European Educational AI Index 2025')
     pdf.link_text('   ', 'https://www.gostudent.org/en-gb/blog/which-country-is-best-for-ai-in-education')
-    pdf.bullet('Google Trends 2024')
+    pdf.bullet('Google Trends 2024 (media_score — vyloučen z overall, viz 2.3)')
     pdf.link_text('   ', 'https://trends.google.com/')
 
     pdf.section_title('Sekundární zdroje')
@@ -253,16 +254,10 @@ def create_methodology_pdf():
                'hodnotou změní skóre všech ostatních.')
     pdf.bullet('Edu_policy_coverage měří existenci politik (checklist), nikoli kvalitu, '
                'intenzitu či financování.')
-    pdf.bullet('Váhy dimenzí (40/40/20) nejsou empiricky validovány. Citlivostní analýza '
+    pdf.bullet('Rovné váhy (50/50) nejsou empiricky validovány. Citlivostní analýza '
                'ukazuje stabilitu pořadí, ale neprokáže optimalitu vah.')
     pdf.bullet('N = 27. Malý vzorek limituje možnost statistické inference a zvyšuje '
                'citlivost na jednotlivá pozorování.')
-
-    pdf.section_title('5.3 Omezení media_score')
-    pdf.bullet('Pouze anglický dotaz „AI education" — silný bias vůči anglicky mluvícím zemím.')
-    pdf.bullet('8 zemí má media_score = 0,0; 1 země (Irsko) = 1,0 — extrémní distribuce.')
-    pdf.bullet('Neodráží odborný diskurz, pouze veřejný zájem.')
-    pdf.bullet('Snížená váha (20 %) zmírňuje, ale plně neodstraňuje tento problém.')
 
     pdf.add_page()
 
@@ -271,14 +266,15 @@ def create_methodology_pdf():
     # ============================================================
     pdf.chapter_title('6. Poznámky k vybraným zemím')
 
-    pdf.section_title('Švédsko (SE) — 1. místo, skóre 0,77')
+    pdf.section_title('Německo (DE) — 1. místo, skóre 0,90')
     pdf.body_text(
-        'Švédsko dosahuje nejvyššího celkového skóre díky maximálnímu policy_coverage (1,0) — '
-        'AI je vyučováno jako samostatný předmět. Adoption je odhadnuta proxy (0,75) '
-        'z důvodu absence přímých dat. Interpretace pozice s výhradou.'
+        'Německo dosahuje nejvyššího celkového skóre díky vysokému policy_coverage (0,8) '
+        'a maximální normalizované adopci (1,0). KMK AI guidelines 2024 pokrývají '
+        'integraci do kurikula na úrovni spolkových zemí. Adoption částečně založena '
+        'na jednom indikátoru (ai_in_schools_access = 44 %) — metoda „partial".'
     )
 
-    pdf.section_title('Česko (CZ) — 11. místo, skóre 0,51')
+    pdf.section_title('Česko (CZ) — 10. místo, skóre 0,60')
     pdf.body_text(
         'Česko má paradoxně nejvyšší měřenou adopci učitelů v EU (46 %), '
         'ale nízké pokrytí politik (0,2). Neexistuje explicitní strategie AI '
@@ -286,7 +282,7 @@ def create_methodology_pdf():
         'bez systémové politické podpory.'
     )
 
-    pdf.section_title('Francie (FR) — 19. místo, skóre 0,34')
+    pdf.section_title('Francie (FR) — 16. místo, skóre 0,40')
     pdf.body_text(
         'Paradox indexu: Francie investuje 1 mld. EUR do AI strategie a má vysoké '
         'policy_coverage (0,8), ale nejnižší měřenou adopci učitelů v EU (14 %). '
@@ -320,34 +316,30 @@ def create_methodology_pdf():
 
     pdf.section_title('8.1 Metoda')
     pdf.body_text(
-        'Váhy všech tří dimenzí byly systematicky perturnovány o ±15 procentních bodů '
-        '(krok 5 p.b.) při zachování podmínky: suma vah = 1 a minimum každé váhy ≥ 0,05. '
-        'Celkem testováno 43 kombinací vah. Pro každou kombinaci bylo vypočteno '
-        'celkové skóre a pořadí zemí, a porovnáno se základním pořadím pomocí '
+        'Poměr vah dvou dimenzí byl systematicky měněn v rozsahu 20/80 až 80/20 '
+        '(krok 5 p.b.), celkem 13 kombinací. Pro každou kombinaci bylo vypočteno '
+        'celkové skóre a pořadí zemí, a porovnáno se základním pořadím (50/50) pomocí '
         'Spearmanovy korelace pořadí (ρ).'
     )
 
     pdf.section_title('8.2 Výsledky')
-    pdf.bullet('Spearmanovo ρ: min = 0,930, průměr = 0,970, max = 1,000')
-    pdf.bullet('100 % kombinací má ρ ≥ 0,90')
-    pdf.bullet('84 % kombinací má ρ ≥ 0,95')
+    pdf.bullet('Spearmanovo ρ: min = 0,846, průměr = 0,941, max = 0,999')
+    pdf.bullet('77 % kombinací má ρ ≥ 0,90')
+    pdf.bullet('46 % kombinací má ρ ≥ 0,95')
+    pdf.bullet('Top-5 zemí identická v 54 % kombinací')
     pdf.ln(2)
     pdf.body_text(
-        'Závěr: Pořadí zemí je robustní vůči změnám vah v testovaném rozsahu. '
-        'Největší nestabilitu vykazují země v prostředním pásmu žebříčku (pozice 10–20), '
-        'zejména při výrazném posílení váhy media_score.'
+        'Závěr: Pořadí zemí je robustní v širokém rozsahu vah. K výrazným změnám '
+        'dochází pouze při extrémních poměrech (20/80 nebo 80/20), kde jedna dimenze '
+        'dominuje. V rozumném rozsahu 30/70 až 70/30 je ρ ≥ 0,90.'
     )
 
     pdf.section_title('8.3 Korelace dimenzí (Spearman)')
-    pdf.body_text('Korelační matice dimenzí (N=27):')
-    pdf.bullet('Policy coverage × Adoption: ρ = 0,08')
-    pdf.bullet('Policy coverage × Media: ρ = 0,42')
-    pdf.bullet('Adoption × Media: ρ = 0,25')
-    pdf.ln(2)
     pdf.body_text(
-        'Nízká korelace policy–adoption (0,08) naznačuje, že existence politik '
-        'a skutečná adopce jsou do značné míry nezávislé dimenze, '
-        'což podporuje jejich oddělené zahrnutí v indexu.'
+        'Spearman ρ(policy_coverage, adoption) = 0,08 (N=27). '
+        'Nízká korelace potvrzuje, že existence politik a skutečná adopce jsou '
+        'do značné míry nezávislé dimenze, což podporuje jejich oddělené zahrnutí '
+        'v indexu a validitu dvoudimenzionálního modelu.'
     )
 
     pdf.add_page()
@@ -388,10 +380,9 @@ def create_methodology_pdf():
     pdf.ln()
     pdf.set_font('DejaVu', '', 10)
     for label, vals in [
-        ('Overall score', (0.43, 0.20, 0.12, 0.77, 0.43)),
+        ('Overall score', (0.49, 0.23, 0.14, 0.90, 0.50)),
         ('Policy coverage', (0.39, 0.34, 0.00, 1.00, 0.30)),
         ('Adoption', (0.59, 0.31, 0.00, 1.00, 0.55)),
-        ('Media', (0.17, 0.22, 0.00, 1.00, 0.15)),
     ]:
         pdf.cell(55, 6, label, border=1)
         for v in vals:
@@ -406,8 +397,9 @@ def create_methodology_pdf():
     pdf.body_text('Data sebrána: leden 2025.')
     pdf.body_text('Předpokládaná frekvence aktualizace: ročně.')
     pdf.body_text(
-        'Verze v4 adresuje zpětnou vazbu z akademické recenze: transparentní výpočet adoption, '
-        'reváhování dimenzí, kvantitativní citlivostní analýza, deskriptivní statistiky.'
+        'Verze v5: Vyloučen media_score z celkového skóre (fundamentální validitní problém — '
+        'anglický Google Trends dotaz měří jazykový bias). Přechod na dvoudimenzionální model '
+        '50/50 (policy + adoption). Citlivostní analýza přepočtena pro 2D váhy.'
     )
 
     # ============================================================
